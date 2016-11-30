@@ -1,3 +1,9 @@
+\include
+\lib
+\images
+\x64
+*.dll
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
