@@ -79,7 +79,7 @@ sf::Texture& cell::getTexture()
 
 sf::Vector2f getPixelCoords(int x, int y)
 {
-	float xBoardWindowRatio = (float)WINDOW_WIDTH / (float)BOARD_HEIGHT;
+	float xBoardWindowRatio = (float)WINDOW_WIDTH / (float)BOARD_WIDTH;
 	float yBoardWindowRatio = (float)WINDOW_HEIGHT / (float)BOARD_HEIGHT;
 	sf::Vector2f tmp;
 	tmp.x = std::floor(x * xBoardWindowRatio);

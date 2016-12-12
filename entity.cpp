@@ -10,12 +10,15 @@ entityManager::entityManager( int _numOfBuses, int _difficulty, std::vector<bool
 	{
 		
 		enemy tmp;
+		tmp.speed = (rand() % _difficulty) + 1;
 		if (getLocation(tmp, _validRows))
 		{
-			//if (createSprite())
+			tmp.length = (rand() % _difficulty) + (rand() % 3) + 1;
+			if (createSprite(tmp))
+			{
+				EntityList.push_back(tmp);
+			}
 		}
-
-		rand() % _difficulty + 1;
 	}
 
 }
@@ -29,14 +32,46 @@ bool entityManager::getLocation(enemy& e, std::vector<bool>& _validRows)
 	}
 	if (validNums.size() == 0) { return(false); }
 
-	e.boardPos.y = rand() % validNums.size();
+	e.boardPos.y = validNums[rand() % validNums.size()];
 	e.destinationPos = e.boardPos;
 
 	char direction = rand() % 1; //left is 0
 	e.boardPos.x = direction ? (BOARD_WIDTH + 1) : -1;
 	e.destinationPos.x = !direction ? (BOARD_WIDTH + 1) : -1;
 
+	e.pixelPos = getPixelCoords(e.boardPos);
+
+
+
 	return(true);
+}
+
+bool entityManager::createSprite(enemy& e)
+{
+	float yRatio = (float)WINDOW_HEIGHT / (float)BOARD_HEIGHT;
+	float xRatio = (float)WINDOW_WIDTH / (float)BOARD_WIDTH;
+	e.sprite.setTexture(TEXTURE_PIXEL);
+	e.sprite.setScale(sf::Vector2f(xRatio * e.length, yRatio));
+	e.sprite.setColor(sf::Color(200, rand() % 255, rand() % 255, 255));
+	e.sprite.setPosition(e.pixelPos);
+	return(true);
+
+}
+
+void entityManager::update(board& b)
+{
+	for (enemy e : EntityList)
+	{
+		e.activate(b);
+	}
+}
+
+void entityManager::drawEntities(sf::RenderWindow& w)
+{
+	for (enemy e : EntityList)
+	{
+		w.draw(e.sprite);
+	}
 }
 
 
@@ -70,7 +105,7 @@ void entity::moveX(char direction, float speed)
 	sprite.setPosition(spritePos);
 }
 
-void player::activate(board& b)
+void entity::activate(board& b)
 {
 	bool up = destinationPos.y < boardPos.y;
 	bool down = destinationPos.y > boardPos.y;
@@ -103,9 +138,6 @@ void player::initialize()
 	speed = 2;
 }
 
-void enemy::activate(board & b)
-{
-}
 
 void enemy::initialize()
 {

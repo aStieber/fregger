@@ -11,12 +11,14 @@ const int WINDOW_HEIGHT = 800;
 sf::Texture TEXTURE_DIRT;
 sf::Texture TEXTURE_WATER;
 sf::Texture TEXTURE_FREG;
+sf::Texture TEXTURE_PIXEL;
 
 void loadTextures()
 {
 	TEXTURE_DIRT.loadFromFile("images/dirt.png");
 	TEXTURE_WATER.loadFromFile("images/water.png");
 	TEXTURE_FREG.loadFromFile("images/freg.png");
+	TEXTURE_PIXEL.loadFromFile("images/pixel.png");
 }
 
 void setDest(player& f, bool& i)
@@ -38,7 +40,7 @@ int WinMain()
 	sf::Time gameTimeAcc;
 	sf::Time windowRefreshTimeAcc;
 
-	player freg(sf::Vector2i(1, 5));
+	player freg(BoardVector(1, 5));
 
 	entityManager eManager(5, 1, std::vector<bool>(BOARD_HEIGHT, true));
 	
@@ -92,6 +94,8 @@ int WinMain()
 				freg.sprite.setPosition(b.gameBoard[freg.destinationPos.y][freg.destinationPos.x].pixelPos);
 			}
 
+			eManager.update(b);
+
 			gameTimeAcc -= gameInterval;
 		}
 
@@ -101,6 +105,7 @@ int WinMain()
 		{
 			window.clear();
 			window.draw(b.background);
+			eManager.drawEntities(window);
 			window.draw(freg.sprite);
 			window.display();
 
