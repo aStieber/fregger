@@ -6,7 +6,7 @@
 
 entityManager::entityManager(int _numOfBuses, int _difficulty, std::vector<bool> _validRows) {
 	srand(time(NULL));
-	difficulty = _difficulty;
+	difficulty = std::max(_difficulty, 3);
 	validRows = _validRows;
 
 	for (size_t i = 0; i < _numOfBuses; i++) {
@@ -18,12 +18,18 @@ entityManager::entityManager(int _numOfBuses, int _difficulty, std::vector<bool>
 }
 
 bool entityManager::createEntity(enemy& e) {
-
-	e.speed = (float)(rand() % difficulty) + ((float)(rand() % 10) / 10.0) + .2;
+	
 	if (getLocation(e)) {
 		e.length = (rand() % difficulty) + (rand() % 3) + 1;
-		return(createSprite(e));
 	}
+	
+	int distance = getPixelCoords(std::abs(e.boardPos.x - e.destinationPos.x), 0).x;
+	float time = (float)(difficulty * 30) + (float)(rand() % (distance / 3));
+	e.speed = distance / time;
+	if (createSprite(e)) {
+		return(true);
+	}
+
 	return(false);
 }
 
@@ -37,7 +43,7 @@ bool entityManager::getLocation(enemy& e) {
 	e.boardPos.y = validNums[rand() % validNums.size()];
 	e.destinationPos = e.boardPos;
 
-	char direction = rand() % 1; //left is 0
+	char direction = rand() % 2; //left is 0
 	e.boardPos.x = direction ? (BOARD_WIDTH + 1) : -1;
 	e.destinationPos.x = !direction ? (BOARD_WIDTH + 1) : -1;
 	e.pixelPos = getPixelCoords(e.boardPos);
@@ -92,8 +98,12 @@ entity::entity() {
 
 bool entity::checkIfAtDestination() {
 	sf::Vector2f destPixelCoords = getPixelCoords(destinationPos);
-	return(abs(pixelPos.x - destPixelCoords.x) < (0.01 * (pixelPos.x + 1)) && //+ 1 is to prevent this from failing when pixelPox.x/y == 0
-		abs(pixelPos.y - destPixelCoords.y) < (0.01 * (pixelPos.y + 1)));
+	bool checker = abs(pixelPos.x - destPixelCoords.x) < 10;
+	bool x = abs(pixelPos.x - destPixelCoords.x) < (.01 * (abs(pixelPos.x)+ 1));
+	bool y = abs(pixelPos.y - destPixelCoords.y) < (.01 * (abs(pixelPos.y) + 1));
+	bool t = x && y; //+ 1 is to prevent this from failing when pixelPox.x/y == 0
+
+	return(t);
 }
 
 

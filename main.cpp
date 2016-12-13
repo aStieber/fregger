@@ -52,6 +52,9 @@ int WinMain() {
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				window.close();
+			if (event.key.code == sf::Keyboard::R) {
+				//restart
+			}
 		}
 
 		while (gameTimeAcc >= gameInterval) {
