@@ -13,23 +13,20 @@ sf::Texture TEXTURE_WATER;
 sf::Texture TEXTURE_FREG;
 sf::Texture TEXTURE_PIXEL;
 
-void loadTextures()
-{
+void loadTextures() {
 	TEXTURE_DIRT.loadFromFile("images/dirt.png");
 	TEXTURE_WATER.loadFromFile("images/water.png");
 	TEXTURE_FREG.loadFromFile("images/freg.png");
 	TEXTURE_PIXEL.loadFromFile("images/pixel.png");
 }
 
-void setDest(player& f, bool& i)
-{
+void setDest(player& f, bool& i) {
 	f.destinationPos = f.boardPos;
 	i = true;
 }
 
 
-int WinMain()
-{
+int WinMain() {
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "suck my dick jordan", sf::Style::Close);
 	loadTextures();
 	board b;
@@ -43,7 +40,7 @@ int WinMain()
 	player freg(BoardVector(1, 5));
 
 	entityManager eManager(5, 1, std::vector<bool>(BOARD_HEIGHT, true));
-	
+
 	bool inputDisabled = false;
 	while (window.isOpen()) //main loop
 	{
@@ -52,57 +49,47 @@ int WinMain()
 		windowRefreshTimeAcc += t;
 
 		sf::Event event;
-		while (window.pollEvent(event))
-		{
+		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
 
-		while (gameTimeAcc >= gameInterval)
-		{
-			if (!inputDisabled)
-			{
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) 
-				{
+		while (gameTimeAcc >= gameInterval) {
+			if (!inputDisabled) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 					setDest(freg, inputDisabled);
-					freg.destinationPos.y--;
+					freg.destinationPos.y -= (freg.destinationPos.y > 0);
 				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) 
-				{
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 					setDest(freg, inputDisabled);
-					freg.destinationPos.y++;
+					freg.destinationPos.y += (freg.destinationPos.y < BOARD_HEIGHT - 1);
 				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) 
-				{
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 					setDest(freg, inputDisabled);
-					freg.destinationPos.x++;
+					freg.destinationPos.x -= (freg.destinationPos.x > 0);
 				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) 
-				{
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 					setDest(freg, inputDisabled);
-					freg.destinationPos.x--;
+					freg.destinationPos.x += (freg.destinationPos.x < BOARD_WIDTH - 1);
 				}
 				else { inputDisabled = false; }
 			}
-
+			
 			freg.activate(b);
-			if (abs(freg.pixelPos.x - b.gameBoard[freg.destinationPos.y][freg.destinationPos.x].pixelPos.x) < (0.01 * freg.pixelPos.x) &&
-				abs(freg.pixelPos.y - b.gameBoard[freg.destinationPos.y][freg.destinationPos.x].pixelPos.y) < (0.01 * freg.pixelPos.y))
-			{
+			if (abs(freg.pixelPos.x - b.gameBoard[freg.destinationPos.y][freg.destinationPos.x].pixelPos.x) < (0.01 * (freg.pixelPos.x + 1)) && //+ 1 is to prevent this from failing when pixelPox.x/y == 0
+				abs(freg.pixelPos.y - b.gameBoard[freg.destinationPos.y][freg.destinationPos.x].pixelPos.y) < (0.01 * (freg.pixelPos.y + 1))) {
 				inputDisabled = false;
 				freg.boardPos = freg.destinationPos;
 				freg.sprite.setPosition(b.gameBoard[freg.destinationPos.y][freg.destinationPos.x].pixelPos);
 			}
+			
 
 			eManager.update(b);
 
 			gameTimeAcc -= gameInterval;
 		}
 
-
-
-		if (windowRefreshTimeAcc >= windowRefreshInterval)
-		{
+		if (windowRefreshTimeAcc >= windowRefreshInterval) {
 			window.clear();
 			window.draw(b.background);
 			eManager.drawEntities(window);

@@ -12,8 +12,7 @@ extern sf::Texture TEXTURE_WATER;
 extern sf::Texture TEXTURE_FREG;
 extern sf::Texture TEXTURE_PIXEL;
 
-class entity
-{
+class entity {
 public:
 	entity();
 	entity(sf::Vector2i pos);
@@ -29,18 +28,16 @@ protected:
 };
 
 
-class player : public entity
-{
+class player : public entity {
 public:
 	player(sf::Vector2i pos) : entity(pos) { initialize(); };
-	
-	
+
+
 private:
 	void initialize();
 };
 
-class enemy : public entity
-{
+class enemy : public entity {
 public:
 	enemy() : entity() {};
 	enemy(sf::Vector2i pos) : entity(pos) { initialize(); };
@@ -49,8 +46,7 @@ private:
 	void initialize();
 };
 
-class entityManager
-{
+class entityManager {
 public:
 	entityManager(int _numOfBuses, int _difficulty, std::vector<bool> _validRows);
 	void update(board& b);

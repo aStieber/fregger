@@ -19,8 +19,7 @@ sf::Vector2i getBoardCoords(int x, int y);
 sf::Vector2i getBoardCoords(sf::Vector2f v);
 
 
-struct cell
-{
+struct cell {
 public:
 	cell(int _ground, sf::Vector2i _boardPos, sf::Vector2f _pixelPos);
 	sf::Texture& getTexture();
@@ -30,8 +29,7 @@ public:
 	sf::Vector2f pixelPos;
 };
 
-class board
-{
+class board {
 public:
 	board();
 	board(ByteVec& map);
@@ -40,5 +38,5 @@ public:
 	std::vector< std::vector<cell>> gameBoard;
 private:
 	void init(ByteVec& boardMap);
-	
+
 };

@@ -2,20 +2,16 @@
 #include <SFML/Graphics.hpp>
 
 
-entityManager::entityManager( int _numOfBuses, int _difficulty, std::vector<bool> _validRows)
-{
+entityManager::entityManager(int _numOfBuses, int _difficulty, std::vector<bool> _validRows) {
 	srand(time(NULL));
 
-	for (size_t i = 0; i < _numOfBuses; i++)
-	{
-		
+	for (size_t i = 0; i < _numOfBuses; i++) {
+
 		enemy tmp;
 		tmp.speed = (rand() % _difficulty) + 1;
-		if (getLocation(tmp, _validRows))
-		{
+		if (getLocation(tmp, _validRows)) {
 			tmp.length = (rand() % _difficulty) + (rand() % 3) + 1;
-			if (createSprite(tmp))
-			{
+			if (createSprite(tmp)) {
 				EntityList.push_back(tmp);
 			}
 		}
@@ -23,11 +19,9 @@ entityManager::entityManager( int _numOfBuses, int _difficulty, std::vector<bool
 
 }
 
-bool entityManager::getLocation(enemy& e, std::vector<bool>& _validRows)
-{
+bool entityManager::getLocation(enemy& e, std::vector<bool>& _validRows) {
 	std::vector<int> validNums;
-	for (size_t i = 0; i < _validRows.size(); i++)
-	{
+	for (size_t i = 0; i < _validRows.size(); i++) {
 		validNums.push_back(i);
 	}
 	if (validNums.size() == 0) { return(false); }
@@ -46,8 +40,7 @@ bool entityManager::getLocation(enemy& e, std::vector<bool>& _validRows)
 	return(true);
 }
 
-bool entityManager::createSprite(enemy& e)
-{
+bool entityManager::createSprite(enemy& e) {
 	float yRatio = (float)WINDOW_HEIGHT / (float)BOARD_HEIGHT;
 	float xRatio = (float)WINDOW_WIDTH / (float)BOARD_WIDTH;
 	e.sprite.setTexture(TEXTURE_PIXEL);
@@ -58,90 +51,69 @@ bool entityManager::createSprite(enemy& e)
 
 }
 
-void entityManager::update(board& b)
-{
-	for (enemy e : EntityList)
-	{
+void entityManager::update(board& b) {
+	for (enemy e : EntityList) {
 		e.activate(b);
 	}
 }
 
-void entityManager::drawEntities(sf::RenderWindow& w)
-{
-	for (enemy e : EntityList)
-	{
+void entityManager::drawEntities(sf::RenderWindow& w) {
+	for (enemy e : EntityList) {
 		w.draw(e.sprite);
 	}
 }
 
 
-entity::entity(sf::Vector2i pos)
-{
+entity::entity(sf::Vector2i pos) {
 	boardPos = pos;
 	destinationPos = boardPos;
 	pixelPos = getPixelCoords(pos);
 	sprite.setPosition(pixelPos);
 }
 
-entity::entity()
-{
+entity::entity() {
 	boardPos = sf::Vector2i(-1, -1);
 	destinationPos = boardPos;
 }
 
-//void entity::moveX(char direction, float speed)
-//{
-//	char moveDistance = 2;
-//	sf::Vector2f spritePos = sprite.getPosition();
-//	spritePos.x += (direction * moveDistance * speed);
-//	sprite.setPosition(spritePos);
-//}
-
-void entity::moveX(char direction, float speed)
-{
+void entity::moveX(char direction, float speed) {
 	char moveDistance = 2;
 	sf::Vector2f spritePos = sprite.getPosition();
 	spritePos.x += (direction * moveDistance * speed);
 	sprite.setPosition(spritePos);
 }
 
-void entity::activate(board& b)
-{
+void entity::activate(board& b) {
 	bool up = destinationPos.y < boardPos.y;
 	bool down = destinationPos.y > boardPos.y;
 	bool right = destinationPos.x > boardPos.x;
 	bool left = destinationPos.x < boardPos.x;
 
-	if (up)
-	{
+	if (up) {
 		pixelPos.y -= speed;
 	}
-	else if (down)
-	{
+	else if (down) {
 		pixelPos.y += speed;
 	}
-	else if (left)
-	{
+	else if (left) {
 		pixelPos.x -= speed;
 	}
-	else if (right)
-	{
+	else if (right) {
 		pixelPos.x += speed;
 	}
 	sprite.setPosition(pixelPos);
 }
 
-void player::initialize()
-{
+void player::initialize() {
 	sprite.setTexture(TEXTURE_FREG);
-	sprite.setScale(sf::Vector2f(.2, .2));
+	sprite.setScale(sf::Vector2f((float)WINDOW_WIDTH / ((float)BOARD_WIDTH * (float)TEXTURE_FREG.getSize().x),
+								(float)WINDOW_HEIGHT / ((float)BOARD_HEIGHT * (float)TEXTURE_FREG.getSize().y)));
 	speed = 2;
 }
 
 
-void enemy::initialize()
-{
-
-	sprite.setTexture(TEXTURE_FREG);
-	sprite.setScale(sf::Vector2f(.2, .2));
-}
+//void enemy::initialize() {
+//
+//	sprite.setTexture(TEXTURE_FREG);
+//	sprite.setScale(sf::Vector2f(.2, .2));
+//}
