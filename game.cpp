@@ -29,6 +29,7 @@ cell::cell(int _ground, sf::Vector2i _boardPos, sf::Vector2f _pixelPos) {
 void board::init(ByteVec& boardMap) {
 	bg.create(WINDOW_WIDTH, WINDOW_HEIGHT);
 	std::vector<cell> currentRow;
+	if (WINDOW_WIDTH % BOARD_WIDTH != 0 || WINDOW_HEIGHT % BOARD_HEIGHT != 0) { throw new std::exception("board doesn't match window"); }
 	int xImagePositionFactor = WINDOW_WIDTH / BOARD_WIDTH;
 	int yImagePositionFactor = WINDOW_HEIGHT / BOARD_HEIGHT;
 	sf::Vector2f cellSpriteScale((float)WINDOW_WIDTH / ((float)BOARD_WIDTH * (float)TEXTURE_DIRT.getSize().x),

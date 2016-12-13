@@ -1,28 +1,36 @@
 #include "entity.h"
+#include <Windows.h>
+#include <ostream>
 #include <SFML/Graphics.hpp>
 
 
 entityManager::entityManager(int _numOfBuses, int _difficulty, std::vector<bool> _validRows) {
 	srand(time(NULL));
+	difficulty = _difficulty;
+	validRows = _validRows;
 
 	for (size_t i = 0; i < _numOfBuses; i++) {
-
 		enemy tmp;
-		tmp.speed = (rand() % _difficulty) + 1;
-		if (getLocation(tmp, _validRows)) {
-			tmp.length = (rand() % _difficulty) + (rand() % 3) + 1;
-			if (createSprite(tmp)) {
-				EntityList.push_back(tmp);
-			}
+		if (createEntity(tmp)) {
+			EntityList.push_back(tmp);
 		}
 	}
-
 }
 
-bool entityManager::getLocation(enemy& e, std::vector<bool>& _validRows) {
+bool entityManager::createEntity(enemy& e) {
+
+	e.speed = (float)(rand() % difficulty) + ((float)(rand() % 10) / 10.0) + .2;
+	if (getLocation(e)) {
+		e.length = (rand() % difficulty) + (rand() % 3) + 1;
+		return(createSprite(e));
+	}
+	return(false);
+}
+
+bool entityManager::getLocation(enemy& e) {
 	std::vector<int> validNums;
-	for (size_t i = 0; i < _validRows.size(); i++) {
-		validNums.push_back(i);
+	for (size_t i = 0; i < validRows.size(); i++) {
+		if (validRows[i]) { validNums.push_back(i); }
 	}
 	if (validNums.size() == 0) { return(false); }
 
@@ -32,10 +40,8 @@ bool entityManager::getLocation(enemy& e, std::vector<bool>& _validRows) {
 	char direction = rand() % 1; //left is 0
 	e.boardPos.x = direction ? (BOARD_WIDTH + 1) : -1;
 	e.destinationPos.x = !direction ? (BOARD_WIDTH + 1) : -1;
-
 	e.pixelPos = getPixelCoords(e.boardPos);
-
-
+	e.sprite.setPosition(e.pixelPos);
 
 	return(true);
 }
@@ -52,13 +58,21 @@ bool entityManager::createSprite(enemy& e) {
 }
 
 void entityManager::update(board& b) {
-	for (enemy e : EntityList) {
-		e.activate(b);
+	std::vector<int> markedForDeletion;
+	for (int i = 0; i < EntityList.size(); i++) {
+		EntityList[i].activate(b);
+		if (EntityList[i].checkIfAtDestination()) {
+			markedForDeletion.push_back(i);
+		}
+	}
+
+	for (int& d : markedForDeletion) {
+		createEntity(EntityList[d]);
 	}
 }
 
 void entityManager::drawEntities(sf::RenderWindow& w) {
-	for (enemy e : EntityList) {
+	for (enemy& e : EntityList) {
 		w.draw(e.sprite);
 	}
 }
@@ -76,32 +90,32 @@ entity::entity() {
 	destinationPos = boardPos;
 }
 
-void entity::moveX(char direction, float speed) {
-	char moveDistance = 2;
-	sf::Vector2f spritePos = sprite.getPosition();
-	spritePos.x += (direction * moveDistance * speed);
-	sprite.setPosition(spritePos);
+bool entity::checkIfAtDestination() {
+	sf::Vector2f destPixelCoords = getPixelCoords(destinationPos);
+	return(abs(pixelPos.x - destPixelCoords.x) < (0.01 * (pixelPos.x + 1)) && //+ 1 is to prevent this from failing when pixelPox.x/y == 0
+		abs(pixelPos.y - destPixelCoords.y) < (0.01 * (pixelPos.y + 1)));
 }
 
-void entity::activate(board& b) {
-	bool up = destinationPos.y < boardPos.y;
-	bool down = destinationPos.y > boardPos.y;
-	bool right = destinationPos.x > boardPos.x;
-	bool left = destinationPos.x < boardPos.x;
 
-	if (up) {
+bool entity::activate(board& b) {
+
+	if (destinationPos.y < boardPos.y) {
 		pixelPos.y -= speed;
 	}
-	else if (down) {
+	else if (destinationPos.y > boardPos.y) {
 		pixelPos.y += speed;
 	}
-	else if (left) {
+	else if (destinationPos.x < boardPos.x) {
 		pixelPos.x -= speed;
 	}
-	else if (right) {
+	else if (destinationPos.x > boardPos.x) {
 		pixelPos.x += speed;
 	}
+	else {
+		return(false);
+	}
 	sprite.setPosition(pixelPos);
+	return(true);
 }
 
 void player::initialize() {
@@ -110,10 +124,3 @@ void player::initialize() {
 								(float)WINDOW_HEIGHT / ((float)BOARD_HEIGHT * (float)TEXTURE_FREG.getSize().y)));
 	speed = 2;
 }
-
-
-//void enemy::initialize() {
-//
-//	sprite.setTexture(TEXTURE_FREG);
-//	sprite.setScale(sf::Vector2f(.2, .2));
-//}

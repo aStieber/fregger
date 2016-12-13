@@ -39,7 +39,7 @@ int WinMain() {
 
 	player freg(BoardVector(1, 5));
 
-	entityManager eManager(5, 1, std::vector<bool>(BOARD_HEIGHT, true));
+	entityManager eManager(5, 2, std::vector<bool>(BOARD_HEIGHT, true));
 
 	bool inputDisabled = false;
 	while (window.isOpen()) //main loop
@@ -76,11 +76,11 @@ int WinMain() {
 			}
 			
 			freg.activate(b);
-			if (abs(freg.pixelPos.x - b.gameBoard[freg.destinationPos.y][freg.destinationPos.x].pixelPos.x) < (0.01 * (freg.pixelPos.x + 1)) && //+ 1 is to prevent this from failing when pixelPox.x/y == 0
-				abs(freg.pixelPos.y - b.gameBoard[freg.destinationPos.y][freg.destinationPos.x].pixelPos.y) < (0.01 * (freg.pixelPos.y + 1))) {
+			if (freg.checkIfAtDestination()) {
 				inputDisabled = false;
 				freg.boardPos = freg.destinationPos;
-				freg.sprite.setPosition(b.gameBoard[freg.destinationPos.y][freg.destinationPos.x].pixelPos);
+				freg.pixelPos = b.gameBoard[freg.destinationPos.y][freg.destinationPos.x].pixelPos;
+				freg.sprite.setPosition(freg.pixelPos);
 			}
 			
 

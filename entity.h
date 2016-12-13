@@ -16,14 +16,16 @@ class entity {
 public:
 	entity();
 	entity(sf::Vector2i pos);
-	sf::Sprite sprite;
+	
+	bool checkIfAtDestination();
 	sf::Vector2f pixelPos;
+	sf::Sprite sprite;
 	sf::Vector2i boardPos;
 	sf::Vector2i destinationPos;
 	float speed;
-	void activate(board& b);
+	bool activate(board& b);
 protected:
-	void moveX(char direction, float speed);
+	
 	sf::Texture texture;
 };
 
@@ -49,11 +51,16 @@ private:
 class entityManager {
 public:
 	entityManager(int _numOfBuses, int _difficulty, std::vector<bool> _validRows);
+	
 	void update(board& b);
 	void drawEntities(sf::RenderWindow& w);
 private:
+	int difficulty;
+	std::vector<bool> validRows;
 	std::vector<enemy> EntityList;
-	bool getLocation(enemy& e, std::vector<bool>& _validRows);
+	
+	bool createEntity(enemy& e);
+	bool getLocation(enemy& e);
 	bool createSprite(enemy& e);
 
 };
