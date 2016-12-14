@@ -16,10 +16,9 @@ class entity {
 public:
 	entity();
 	entity(sf::Vector2i pos);
-	
 	bool checkIfAtDestination();
-	sf::Vector2f pixelPos;
 	sf::Sprite sprite;
+	sf::Vector2f meterPos;
 	sf::Vector2i boardPos;
 	sf::Vector2i destinationPos;
 	float speed;

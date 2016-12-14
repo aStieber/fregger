@@ -1,23 +1,19 @@
 #pragma once
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include "helpers.h"
 
 typedef std::vector<unsigned char> ByteVec;
 
 extern const int WINDOW_WIDTH;
 extern const int WINDOW_HEIGHT;
+extern const int NUM_METERS_PER_CELL;
 extern sf::Texture TEXTURE_DIRT;
 extern sf::Texture TEXTURE_WATER;
 extern sf::Texture TEXTURE_FREG;
 
 extern const int BOARD_HEIGHT;
 extern const int BOARD_WIDTH;
-
-sf::Vector2f getPixelCoords(int x, int y);
-sf::Vector2f getPixelCoords(sf::Vector2i v);
-sf::Vector2i getBoardCoords(int x, int y);
-sf::Vector2i getBoardCoords(sf::Vector2f v);
-
 
 struct cell {
 public:
@@ -26,13 +22,12 @@ public:
 	int ground;
 
 	sf::Vector2i boardPos;
-	sf::Vector2f pixelPos;
+	sf::Vector2f meterPos;
 };
 
 class board {
 public:
 	board();
-	board(ByteVec& map);
 	sf::Sprite background;
 	sf::RenderTexture bg;
 	std::vector< std::vector<cell>> gameBoard;

@@ -2,11 +2,10 @@
 #include "entity.h"
 #include <SFML/Graphics.hpp>
 
-#define BoardVector sf::Vector2i
-#define PixelVector sf::Vector2f
-
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 800;
+float METER_CONST;
+const int NUM_METERS_PER_CELL = 4;
 
 sf::Texture TEXTURE_DIRT;
 sf::Texture TEXTURE_WATER;
@@ -29,6 +28,7 @@ void setDest(player& f, bool& i) {
 int WinMain() {
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "suck my dick jordan", sf::Style::Close);
 	loadTextures();
+	METER_CONST = (float)WINDOW_WIDTH / (float)BOARD_WIDTH / (float)NUM_METERS_PER_CELL; //4 meters per cell
 	board b;
 
 	sf::Clock clock;
@@ -37,7 +37,7 @@ int WinMain() {
 	sf::Time gameTimeAcc;
 	sf::Time windowRefreshTimeAcc;
 
-	player freg(BoardVector(1, 5));
+	player freg(sf::Vector2i(1, 5));
 
 	entityManager eManager(5, 2, std::vector<bool>(BOARD_HEIGHT, true));
 
@@ -82,8 +82,8 @@ int WinMain() {
 			if (freg.checkIfAtDestination()) {
 				inputDisabled = false;
 				freg.boardPos = freg.destinationPos;
-				freg.pixelPos = b.gameBoard[freg.destinationPos.y][freg.destinationPos.x].pixelPos;
-				freg.sprite.setPosition(freg.pixelPos);
+				freg.meterPos = boardPosToMeterPos(freg.boardPos);
+				freg.sprite.setPosition(meterToPixelCoords(freg.meterPos));
 			}
 			
 
