@@ -6,11 +6,15 @@ extern const int WINDOW_WIDTH;
 extern const int WINDOW_HEIGHT;
 extern const int BOARD_WIDTH;
 extern const int BOARD_HEIGHT;
+extern const int NUM_METERS_PER_CELL;
 
 extern sf::Texture TEXTURE_DIRT;
 extern sf::Texture TEXTURE_WATER;
 extern sf::Texture TEXTURE_FREG;
 extern sf::Texture TEXTURE_PIXEL;
+
+enum { NORTH, SOUTH, EAST, WEST };
+
 
 class entity {
 public:
@@ -21,6 +25,7 @@ public:
 	
 	sf::Vector2i boardPos;
 	sf::Vector2f meterPos;
+	uint8_t direction = 5;
 	sf::Vector2i destinationPos;
 	sf::Vector2f destinationMeterPos;
 	float speed;

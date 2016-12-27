@@ -5,7 +5,7 @@
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 800;
 float METER_CONST;
-const int NUM_METERS_PER_CELL = 4;
+const int NUM_METERS_PER_CELL = 1;
 
 sf::Texture TEXTURE_DIRT;
 sf::Texture TEXTURE_WATER;
@@ -39,7 +39,7 @@ int WinMain() {
 
 	player freg(sf::Vector2i(1, 5));
 
-	entityManager eManager(5, 2, std::vector<bool>(BOARD_HEIGHT, true));
+	entityManager eManager(0, 2, std::vector<bool>(BOARD_HEIGHT, true));
 
 	bool inputDisabled = false;
 	while (window.isOpen()) //main loop
@@ -62,24 +62,28 @@ int WinMain() {
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 					setDest(freg, inputDisabled);
 					freg.destinationPos.y -= (freg.destinationPos.y > 0);
+					freg.direction = NORTH;
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 					setDest(freg, inputDisabled);
 					freg.destinationPos.y += (freg.destinationPos.y < BOARD_HEIGHT - 1);
+					freg.direction = SOUTH;
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 					setDest(freg, inputDisabled);
 					freg.destinationPos.x -= (freg.destinationPos.x > 0);
+					freg.direction = WEST;
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 					setDest(freg, inputDisabled);
 					freg.destinationPos.x += (freg.destinationPos.x < BOARD_WIDTH - 1);
+					freg.direction = EAST;
 				}
 				else { inputDisabled = false; }
+				freg.destinationMeterPos = boardPosToMeterPos(freg.destinationPos);
 			}
 			
-			freg.activate(b);
-			if (freg.checkIfAtDestination()) {
+			if (freg.activate(b)) {
 				inputDisabled = false;
 				freg.boardPos = freg.destinationPos;
 				freg.meterPos = boardPosToMeterPos(freg.boardPos);
