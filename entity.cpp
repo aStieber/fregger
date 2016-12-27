@@ -45,7 +45,8 @@ bool entityManager::getLocation(enemy& e) {
 	e.boardPos.x = direction ? (BOARD_WIDTH + 1) : -1;
 	e.destinationPos.x = !direction ? (BOARD_WIDTH + 1) : -1;
 	e.meterPos = boardPosToMeterPos(e.boardPos);
-	e.sprite.setPosition(meterToPixelCoords(e.meterPos));
+	e.destinationMeterPos = meterToPixelCoords(e.meterPos);
+	e.sprite.setPosition(e.destinationMeterPos);
 
 	return(true);
 }
@@ -84,9 +85,11 @@ void entityManager::drawEntities(sf::RenderWindow& w) {
 entity::entity(sf::Vector2i pos) {
 	boardPos = pos;
 	destinationPos = boardPos;
-	meterPos = boardPosToMeterPos(pos);
-	sprite.setPosition(meterToPixelCoords(meterPos));
+	meterPos = boardPosToMeterPos(boardPos);
+	destinationMeterPos = meterToPixelCoords(meterPos);
+	sprite.setPosition(destinationMeterPos);
 }
+
 
 entity::entity() {
 	boardPos = sf::Vector2i(-1, -1);
@@ -94,11 +97,7 @@ entity::entity() {
 }
 
 bool entity::checkIfAtDestination() {
-	sf::Vector2f destMeterPos = boardPosToMeterPos(destinationPos);
-	bool x = abs(meterPos.x - destMeterPos.x) < (.01 * (abs(meterPos.x) + 1));//+ 1 is to prevent this from failing when pixelPox.x/y == 0
-	bool y = abs(meterPos.y - destMeterPos.y) < (.01 * (abs(meterPos.y) + 1));
-	bool t = x && y; 
-	return(t);
+	//clamp to destinationPixelPos
 }
 
 

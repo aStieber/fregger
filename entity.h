@@ -18,9 +18,11 @@ public:
 	entity(sf::Vector2i pos);
 	bool checkIfAtDestination();
 	sf::Sprite sprite;
-	sf::Vector2f meterPos;
+	
 	sf::Vector2i boardPos;
+	sf::Vector2f meterPos;
 	sf::Vector2i destinationPos;
+	sf::Vector2f destinationMeterPos;
 	float speed;
 	bool activate(board& b);
 protected:
