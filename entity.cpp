@@ -12,6 +12,7 @@ entityManager::entityManager(int _numOfBuses, int _difficulty, std::vector<bool>
 		enemy tmp;
 		if (createEntity(tmp)) {
 			EntityList.push_back(tmp);
+			validRows[tmp.boardPos.y] = false;
 		}
 	}
 }
@@ -20,9 +21,7 @@ bool entityManager::createEntity(enemy& e) {
 	e.length = (rand() % difficulty) + (rand() % 3) + 1;
 	
 	if (getLocation(e)) {
-		int distance = meterDistance(e.boardPos.x, e.destinationPos.x);
-		float time = (float)(difficulty * 50) + (float)(rand() % (distance / 3));
-		e.speed = distance / time; //in meters/tick
+		e.speed = .05 * difficulty * ((rand() % difficulty) + 8) / 20.0;
 		if (createSprite(e)) {
 			return(true);
 		}
@@ -43,17 +42,17 @@ bool entityManager::getLocation(enemy& e) {
 	if (rand() % 2) { //starting on right
 		e.boardPos.x = (BOARD_WIDTH + e.length);
 		e.destinationPos.x = (0 - e.length);
-		e.direction = EAST;
+		e.direction = WEST;
 	}
 	else { //starting on left
 		e.boardPos.x = (0 - e.length);
 		e.destinationPos.x = (BOARD_WIDTH + e.length);
-		e.direction = WEST;
+		e.direction = EAST;
 	}
 
 	e.meterPos = boardPosToMeterPos(e.boardPos);
-	e.destinationMeterPos = meterToPixelCoords(e.meterPos);
-	e.sprite.setPosition(e.destinationMeterPos);
+	e.destinationMeterPos = boardPosToMeterPos(e.destinationPos);
+	e.sprite.setPosition(meterToPixelCoords(e.meterPos));
 
 	return(true);
 }
@@ -74,10 +73,12 @@ void entityManager::update(board& b) {
 	for (int i = 0; i < EntityList.size(); i++) {
 		if (EntityList[i].activate(b)) {
 			markedForDeletion.push_back(i);
+			validRows[EntityList[i].boardPos.y] = true;
 		}
 	}
 	for (int& d : markedForDeletion) {
 		createEntity(EntityList[d]);
+		validRows[EntityList[d].boardPos.y] = false;
 	}
 }
 
@@ -92,7 +93,7 @@ entity::entity(sf::Vector2i pos) {
 	boardPos = pos;
 	destinationPos = boardPos;
 	meterPos = boardPosToMeterPos(boardPos);
-	destinationMeterPos = meterToPixelCoords(meterPos);
+	destinationMeterPos = meterPos;
 	sprite.setPosition(meterPos);
 }
 
@@ -124,7 +125,6 @@ bool entity::activate(board& b) {
 	default:
 		break;
 	}
-
 	sprite.setPosition(meterToPixelCoords(meterPos));
 	return(false);
 }

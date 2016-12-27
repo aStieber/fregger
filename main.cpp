@@ -39,7 +39,7 @@ int WinMain() {
 
 	player freg(sf::Vector2i(1, 5));
 
-	entityManager eManager(0, 2, std::vector<bool>(BOARD_HEIGHT, true));
+	entityManager eManager(5, 2, std::vector<bool>(BOARD_HEIGHT, true));
 
 	bool inputDisabled = false;
 	while (window.isOpen()) //main loop
