@@ -21,7 +21,7 @@ bool entityManager::createEntity(enemy& e) {
 	e.length = (rand() % difficulty) + (rand() % 3) + 1;
 	
 	if (getLocation(e)) {
-		e.speed = .05 * difficulty * ((rand() % difficulty) + 8) / 20.0;
+		e.speed = NUM_METERS_PER_CELL / (15.0 + (rand() % 40)); //.025-.075
 		if (createSprite(e)) {
 			return(true);
 		}
