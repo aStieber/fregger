@@ -8,9 +8,6 @@ extern const int BOARD_WIDTH;
 extern const int BOARD_HEIGHT;
 extern const int NUM_METERS_PER_CELL;
 
-extern sf::Texture TEXTURE_DIRT;
-extern sf::Texture TEXTURE_WATER;
-extern sf::Texture TEXTURE_FREG;
 extern sf::Texture TEXTURE_PIXEL;
 
 enum { NORTH, SOUTH, EAST, WEST };
@@ -56,10 +53,11 @@ private:
 
 class entityManager {
 public:
-	entityManager(int _numOfBuses, int _difficulty, std::vector<bool> _validRows);
+	entityManager(int _numOfBuses, int _difficulty);
 	
 	void update(board& b);
 	void drawEntities(sf::RenderWindow& w);
+	bool checkCollision(player freg);
 private:
 	int difficulty;
 	std::vector<bool> validRows;
@@ -68,5 +66,7 @@ private:
 	bool createEntity(enemy& e);
 	bool getLocation(enemy& e);
 	bool createSprite(enemy& e);
+	void delayEntrance(enemy& e);
+
 
 };

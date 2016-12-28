@@ -6,9 +6,19 @@ const int BOARD_WIDTH = 10;
 const int BOARD_HEIGHT = 10;
 
 
-const enum { DIRT, WATER, ROAD }; //ground types
+const enum { DIRT, WATER, ROAD, START, FINISH }; //ground types
 
-ByteVec defaultMap = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+ByteVec defaultMap = { 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+						1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+						1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+						1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+						1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+						0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 3, 0, 0, 0, 0, 0 };
+/* ByteVec defaultMap = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 						1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 						1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 						1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -18,6 +28,7 @@ ByteVec defaultMap = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 						0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 						0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 						0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+*/
 
 cell::cell(int _ground, sf::Vector2i _boardPos, sf::Vector2f _meterPos) {
 	ground = _ground;
@@ -60,6 +71,10 @@ sf::Texture& cell::getTexture() {
 		return(TEXTURE_DIRT);
 	case WATER:
 		return(TEXTURE_WATER);
+	case START:
+		return(TEXTURE_START);
+	case FINISH:
+		return(TEXTURE_FINISH);
 	default:
 		throw new std::out_of_range("Texture not found");
 	}

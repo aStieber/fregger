@@ -4,13 +4,16 @@
 #include <SFML/Graphics.hpp>
 
 
-entityManager::entityManager(int _numOfBuses, int _difficulty, std::vector<bool> _validRows) {
+entityManager::entityManager(int _numOfBuses, int _difficulty) {
 	srand(time(NULL));
 	difficulty = std::max(_difficulty, 3);
-	validRows = _validRows;
+	validRows = std::vector<bool>(BOARD_HEIGHT, true);
+	validRows.front() = false;
+	validRows.back() = false;
 	for (size_t i = 0; i < _numOfBuses; i++) {
 		enemy tmp;
 		if (createEntity(tmp)) {
+			delayEntrance(tmp); //only done at beginning of game
 			EntityList.push_back(tmp);
 			validRows[tmp.boardPos.y] = false;
 		}
@@ -21,10 +24,8 @@ bool entityManager::createEntity(enemy& e) {
 	e.length = (rand() % difficulty) + (rand() % 3) + 1;
 	
 	if (getLocation(e)) {
-		e.speed = NUM_METERS_PER_CELL / (15.0 + (rand() % 40)); //.025-.075
-		if (createSprite(e)) {
-			return(true);
-		}
+		e.speed = NUM_METERS_PER_CELL / (15.0 + (rand() % 40)); //.018 to .066 if NUM_METERS == 1
+		if (createSprite(e)) { return(true);}
 	}
 	return(false);
 }
@@ -68,6 +69,16 @@ bool entityManager::createSprite(enemy& e) {
 
 }
 
+void entityManager::delayEntrance(enemy& e) {
+
+	int distance = rand() % 8;
+	e.boardPos.x += (e.direction == EAST ? (-1 * distance) : distance);
+
+	e.meterPos = boardPosToMeterPos(e.boardPos);
+	e.destinationMeterPos = boardPosToMeterPos(e.destinationPos);
+	e.sprite.setPosition(meterToPixelCoords(e.meterPos));
+}
+
 void entityManager::update(board& b) {
 	std::vector<int> markedForDeletion;
 	for (int i = 0; i < EntityList.size(); i++) {
@@ -86,6 +97,17 @@ void entityManager::drawEntities(sf::RenderWindow& w) {
 	for (enemy& e : EntityList) {
 		w.draw(e.sprite);
 	}
+}
+
+bool entityManager::checkCollision(player freg) {
+	sf::Sprite fregSprite = freg.sprite; //sprite.getGlobalBounds()
+	//fregSprite.setOrigin(200, 200);
+	//fregSprite.scale(0.9, 0.9);
+	sf::FloatRect fB = fregSprite.getGlobalBounds();
+	for (enemy& e : EntityList) {
+		if (fB.intersects(e.sprite.getGlobalBounds())) { return(true); }
+	}
+	return false;
 }
 
 
