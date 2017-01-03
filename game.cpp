@@ -6,18 +6,20 @@ const int BOARD_WIDTH = 10;
 const int BOARD_HEIGHT = 10;
 
 
-const enum { DIRT, WATER, ROAD, START, FINISH }; //ground types
+const enum { DIRT, WATER, START, FINISH }; //ground types
+ByteVec defaultMap = { FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH,
+						WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER,
+						WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER,
+						WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER,
+						WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER,
+						DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
+						DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
+						DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
+						DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
+						DIRT, DIRT, DIRT, DIRT, START, DIRT, DIRT, DIRT, DIRT, DIRT };
 
-ByteVec defaultMap = { 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-						1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-						1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-						1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-						1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-						0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-						0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-						0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-						0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-						0, 0, 0, 0, 3, 0, 0, 0, 0, 0 };
+
+
 /* ByteVec defaultMap = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 						1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 						1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -41,8 +43,6 @@ void board::init(ByteVec& boardMap) {
 	std::vector<cell> currentRow;
 	sf::Vector2f cellSpriteScale((float)WINDOW_WIDTH / ((float)BOARD_WIDTH * (float)TEXTURE_DIRT.getSize().x),
 								(float)WINDOW_HEIGHT / ((float)BOARD_HEIGHT * (float)TEXTURE_DIRT.getSize().y));
-	
-
 
 	for (int y = 0; y < BOARD_HEIGHT; y++) {
 		currentRow.clear();
@@ -62,7 +62,9 @@ void board::init(ByteVec& boardMap) {
 }
 
 board::board() {
+	//init(getPerlinMap());
 	init(defaultMap);
+
 }
 
 sf::Texture& cell::getTexture() {

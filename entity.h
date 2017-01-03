@@ -10,6 +10,7 @@ extern const int NUM_METERS_PER_CELL;
 
 extern sf::Texture TEXTURE_PIXEL;
 
+
 enum { NORTH, SOUTH, EAST, WEST };
 
 
@@ -36,8 +37,7 @@ protected:
 class player : public entity {
 public:
 	player(sf::Vector2i pos) : entity(pos) { initialize(); };
-
-
+	bool isDrowned(board& b);
 private:
 	void initialize();
 };

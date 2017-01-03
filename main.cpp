@@ -1,6 +1,10 @@
 #include "game.h"
 #include "entity.h"
+#include <sstream>
 #include <SFML/Graphics.hpp>
+
+//#define DEBUG
+
 
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 800;
@@ -14,7 +18,8 @@ sf::Texture TEXTURE_PIXEL;
 sf::Texture TEXTURE_START;
 sf::Texture TEXTURE_FINISH;
 
-enum {INGAME, DEAD, WON};
+
+enum {INGAME, CRUSHED, DROWNED, WON};
 
 void loadTextures() {
 	TEXTURE_DIRT.loadFromFile("images/dirt.png");
@@ -46,9 +51,13 @@ void initializeGame() {
 int WinMain() {
 	sf::Font font;
 	font.loadFromFile("Inconsolata-Regular.ttf");
-	sf::Text crushedText = loadText("crushed | press R", font);
+	sf::Text crushedText = loadText("crushed yea| press R", font);
 	sf::Text drownedText = loadText("drowned | press R", font);
 	sf::Text wonText = loadText("you won it | press R", font);
+#ifdef DEBUG
+	sf::Text debugText;
+#endif // DEBUG
+	
 
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "go to the top", sf::Style::Close);
 	loadTextures();
@@ -77,8 +86,8 @@ int WinMain() {
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				window.close();
-			if (event.key.code == sf::Keyboard::R) {
-				goto reset; //lol
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
+				goto reset; //just for testing
 			}
 		}
 
@@ -107,34 +116,53 @@ int WinMain() {
 				else { inputDisabled = false; }
 				freg.destinationMeterPos = boardPosToMeterPos(freg.destinationPos);
 			}
-			
+
 			if (freg.activate(b)) {
 				inputDisabled = false;
 				freg.boardPos = freg.destinationPos;
 				freg.meterPos = boardPosToMeterPos(freg.boardPos);
 				freg.sprite.setPosition(meterToPixelCoords(freg.meterPos));
 			}
-			
+
 
 			eManager.update(b);
-			if (eManager.checkCollision(freg)) { status = DEAD;	}
+			if (eManager.checkCollision(freg)) { status = CRUSHED; }
+			if (freg.isDrowned(b)) { status = DROWNED; }
 			if (freg.boardPos.y == 0) { status = WON; }
+
+#ifdef DEBUG
+			std::stringstream debugStr;
+			debugStr << "x: " << freg.boardPos.x << " y: " << freg.boardPos.y << " g: " << b.gameBoard[freg.boardPos.y][freg.boardPos.x].ground;
+			debugText = loadText(debugStr.str(), font);
+#endif // DEBUG
 
 			gameTimeAcc -= gameInterval;
 		}
-
 		if (windowRefreshTimeAcc >= windowRefreshInterval) {
 			window.clear();
 			window.draw(b.background);
 			eManager.drawEntities(window);
 			window.draw(freg.sprite);
+#ifdef DEBUG
+			window.draw(debugText);
+#endif // DEBUG
 			if (status != INGAME) {
-				if (status == DEAD) { window.draw(crushedText); }
-				if (status == WON) { window.draw(wonText); }
+				switch (status) {
+				case CRUSHED:
+					window.draw(crushedText);
+					break;
+				case DROWNED:
+					window.draw(drownedText);
+					break;
+				case WON:
+					window.draw(wonText);
+					break;
+				default:
+					break;
+				}
 			}
 			
 			window.display();
-
 			windowRefreshTimeAcc -= windowRefreshInterval;
 		}
 	}

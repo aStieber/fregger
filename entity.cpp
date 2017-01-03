@@ -3,6 +3,7 @@
 #include <ostream>
 #include <SFML/Graphics.hpp>
 
+const enum { DIRT, WATER, START, FINISH }; //ground types
 
 entityManager::entityManager(int _numOfBuses, int _difficulty) {
 	srand(time(NULL));
@@ -156,4 +157,9 @@ void player::initialize() {
 	sprite.setScale(sf::Vector2f((float)WINDOW_WIDTH / ((float)BOARD_WIDTH * (float)TEXTURE_FREG.getSize().x),
 								(float)WINDOW_HEIGHT / ((float)BOARD_HEIGHT * (float)TEXTURE_FREG.getSize().y)));
 	speed = (float)NUM_METERS_PER_CELL / 40.0;
+}
+
+bool player::isDrowned(board& b) {
+	auto x = b.gameBoard[boardPos.y][boardPos.x].ground;
+	return !(x == START || x == FINISH || x == DIRT);//if dirt
 }
