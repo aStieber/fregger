@@ -6,9 +6,6 @@
 
 typedef std::vector<unsigned char> ByteVec;
 
-
-
-
 struct cell {
 public:
 	cell(int _ground, sf::Vector2i _boardPos);

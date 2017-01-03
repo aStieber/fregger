@@ -1,13 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-extern const int WINDOW_WIDTH;
-extern const int WINDOW_HEIGHT;
-extern const int NUM_METERS_PER_CELL;
-
-extern const int BOARD_HEIGHT;
-extern const int BOARD_WIDTH;
-
 
 
 sf::Vector2f meterToPixelCoords(sf::Vector2f m);

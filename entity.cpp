@@ -120,6 +120,9 @@ entity::entity(sf::Vector2i pos) {
 	sprite.setPosition(meterPos);
 }
 
+entity::entity() {
+}
+
 
 bool entity::activate(board& b) {
 	switch (direction) {

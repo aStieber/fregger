@@ -1,5 +1,6 @@
 #include "helpers.h"
 #include <SFML/Graphics.hpp>
+#include "fregger.h"
 
 sf::Vector2f meterToPixelCoords(sf::Vector2f m) {
 	float xBoardWindowRatio = (float)WINDOW_WIDTH / (float)BOARD_WIDTH;
