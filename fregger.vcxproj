@@ -151,9 +151,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="entity.cpp" />
-    <ClCompile Include="game.cpp">
+    <ClCompile Include="board.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="fregger.cpp" />
     <ClCompile Include="helpers.cpp" />
     <ClCompile Include="main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -162,7 +163,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="entity.h" />
-    <ClInclude Include="game.h" />
+    <ClInclude Include="fregger.h" />
+    <ClInclude Include="board.h" />
     <ClInclude Include="helpers.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,0 +1,26 @@
+#pragma once
+#include <SFML/Graphics.hpp>
+
+
+extern const int WINDOW_WIDTH;
+extern const int WINDOW_HEIGHT;
+extern const int NUM_METERS_PER_CELL;
+
+sf::Texture TEXTURE_DIRT;
+sf::Texture TEXTURE_WATER;
+sf::Texture TEXTURE_FREG;
+sf::Texture TEXTURE_PIXEL;
+sf::Texture TEXTURE_START;
+sf::Texture TEXTURE_FINISH;
+
+const enum { INGAME, CRUSHED, DROWNED, WON };
+const enum { DIRT, WATER, START, FINISH }; //ground types
+const enum { NORTH, SOUTH, EAST, WEST };
+
+
+extern const int WINDOW_WIDTH;
+extern const int WINDOW_HEIGHT;
+extern const int NUM_METERS_PER_CELL;
+
+extern const int BOARD_WIDTH;
+extern const int BOARD_HEIGHT;

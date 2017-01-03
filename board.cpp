@@ -1,12 +1,10 @@
-#include "game.h"
+#include "board.h"
 #include <vector>
 #include <SFML/Graphics.hpp>
 
-const int BOARD_WIDTH = 10;
-const int BOARD_HEIGHT = 10;
 
 
-const enum { DIRT, WATER, START, FINISH }; //ground types
+
 ByteVec defaultMap = { FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH,
 						WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER,
 						WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER,
@@ -20,7 +18,7 @@ ByteVec defaultMap = { FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, F
 
 
 cell::cell(int _ground, sf::Vector2i _boardPos) {
-	ground = _ground;
+	groundType = _ground;
 	boardPos = _boardPos;
 }
 
@@ -54,7 +52,7 @@ board::board() {
 }
 
 sf::Texture& cell::getTexture() {
-	switch (ground) {
+	switch (groundType) {
 	case DIRT:
 		return(TEXTURE_DIRT);
 	case WATER:

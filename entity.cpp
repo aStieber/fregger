@@ -3,7 +3,7 @@
 #include <ostream>
 #include <SFML/Graphics.hpp>
 
-const enum { DIRT, WATER, START, FINISH }; //ground types
+
 
 entityManager::entityManager(int _numOfBuses, int _difficulty) {
 	srand(time(NULL));
@@ -121,12 +121,6 @@ entity::entity(sf::Vector2i pos) {
 }
 
 
-entity::entity() {
-	boardPos = sf::Vector2i(-1, -1);
-	destinationPos = boardPos;
-}
-
-
 bool entity::activate(board& b) {
 	switch (direction) {
 	case EAST:
@@ -160,6 +154,6 @@ void player::initialize() {
 }
 
 bool player::isDrowned(board& b) {
-	auto x = b.gameBoard[boardPos.y][boardPos.x].ground;
+	auto x = b.gameBoard[boardPos.y][boardPos.x].groundType;
 	return !(x == START || x == FINISH || x == DIRT);//if dirt
 }

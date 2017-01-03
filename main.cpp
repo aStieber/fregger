@@ -1,25 +1,12 @@
-#include "game.h"
+#include "board.h"
 #include "entity.h"
+#include "fregger.h"
 #include <sstream>
 #include <SFML/Graphics.hpp>
 
 //#define DEBUG
 
 
-const int WINDOW_WIDTH = 800;
-const int WINDOW_HEIGHT = 800;
-float METER_CONST;
-const int NUM_METERS_PER_CELL = 1;
-
-sf::Texture TEXTURE_DIRT;
-sf::Texture TEXTURE_WATER;
-sf::Texture TEXTURE_FREG;
-sf::Texture TEXTURE_PIXEL;
-sf::Texture TEXTURE_START;
-sf::Texture TEXTURE_FINISH;
-
-
-enum {INGAME, CRUSHED, DROWNED, WON};
 
 void loadTextures() {
 	TEXTURE_DIRT.loadFromFile("images/dirt.png");
@@ -100,7 +87,7 @@ int WinMain() {
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 					setDest(freg, inputDisabled);
-					freg.destinationPos.y += (freg.destinationPos.y < BOARD_HEIGHT - 1);
+					freg.destinationPos.y += (freg.destinationPos.y < (BOARD_HEIGHT - 1));
 					freg.direction = SOUTH;
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
@@ -110,7 +97,7 @@ int WinMain() {
 				}
 				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 					setDest(freg, inputDisabled);
-					freg.destinationPos.x += (freg.destinationPos.x < BOARD_WIDTH - 1);
+					freg.destinationPos.x += (freg.destinationPos.x < (BOARD_WIDTH - 1));
 					freg.direction = EAST;
 				}
 				else { inputDisabled = false; }
@@ -132,7 +119,7 @@ int WinMain() {
 
 #ifdef DEBUG
 			std::stringstream debugStr;
-			debugStr << "x: " << freg.boardPos.x << " y: " << freg.boardPos.y << " g: " << b.gameBoard[freg.boardPos.y][freg.boardPos.x].ground;
+			//debugStr << "x: " << freg.boardPos.x << " y: " << freg.boardPos.y << " g: " << b.gameBoard[freg.boardPos.y][freg.boardPos.x].ground;
 			debugText = loadText(debugStr.str(), font);
 #endif // DEBUG
 

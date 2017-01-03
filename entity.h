@@ -1,17 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "game.h"
-
-extern const int WINDOW_WIDTH;
-extern const int WINDOW_HEIGHT;
-extern const int BOARD_WIDTH;
-extern const int BOARD_HEIGHT;
-extern const int NUM_METERS_PER_CELL;
-
-extern sf::Texture TEXTURE_PIXEL;
-
-
-enum { NORTH, SOUTH, EAST, WEST };
+#include "board.h"
+#include "fregger.h"
 
 
 class entity {
