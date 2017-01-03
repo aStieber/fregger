@@ -51,7 +51,7 @@ void initializeGame() {
 int WinMain() {
 	sf::Font font;
 	font.loadFromFile("Inconsolata-Regular.ttf");
-	sf::Text crushedText = loadText("crushed yea| press R", font);
+	sf::Text crushedText = loadText("crushed | press R", font);
 	sf::Text drownedText = loadText("drowned | press R", font);
 	sf::Text wonText = loadText("you won it | press R", font);
 #ifdef DEBUG

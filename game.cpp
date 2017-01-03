@@ -19,23 +19,9 @@ ByteVec defaultMap = { FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, F
 						DIRT, DIRT, DIRT, DIRT, START, DIRT, DIRT, DIRT, DIRT, DIRT };
 
 
-
-/* ByteVec defaultMap = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-						1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-						1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-						1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-						1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-						0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-						0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-						0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-						0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-						0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-*/
-
-cell::cell(int _ground, sf::Vector2i _boardPos, sf::Vector2f _meterPos) {
+cell::cell(int _ground, sf::Vector2i _boardPos) {
 	ground = _ground;
 	boardPos = _boardPos;
-	meterPos = _meterPos;
 }
 
 void board::init(ByteVec& boardMap) {
@@ -47,10 +33,10 @@ void board::init(ByteVec& boardMap) {
 	for (int y = 0; y < BOARD_HEIGHT; y++) {
 		currentRow.clear();
 		for (int x = 0; x < BOARD_WIDTH; x++) {
-			cell tmpCell = cell(boardMap[y*BOARD_HEIGHT + x], sf::Vector2i(x, y) , sf::Vector2f(NUM_METERS_PER_CELL * x, NUM_METERS_PER_CELL * y));
+			cell tmpCell = cell(boardMap[y*BOARD_HEIGHT + x], sf::Vector2i(x, y));
 			sf::Sprite sprite;
 			sprite.setTexture(tmpCell.getTexture());
-			sprite.setPosition(meterToPixelCoords(tmpCell.meterPos));
+			sprite.setPosition(meterToPixelCoords(boardPosToMeterPos(tmpCell.boardPos)));
 			sprite.scale(cellSpriteScale);
 			bg.draw(sprite);
 			currentRow.push_back(tmpCell);

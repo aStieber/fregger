@@ -20,12 +20,11 @@ extern const int BOARD_WIDTH;
 
 struct cell {
 public:
-	cell(int _ground, sf::Vector2i _boardPos, sf::Vector2f _pixelPos);
+	cell(int _ground, sf::Vector2i _boardPos);
 	sf::Texture& getTexture();
 	int ground;
 
 	sf::Vector2i boardPos;
-	sf::Vector2f meterPos;
 };
 
 class board {
