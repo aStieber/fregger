@@ -48,9 +48,11 @@ int WinMain() {
 
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "go to the top", sf::Style::Close);
 	loadTextures();
-	board b;
+	
 
 	reset:
+
+	board b;
 	sf::Clock clock;
 	const sf::Time gameInterval = sf::milliseconds(8);
 	const sf::Time windowRefreshInterval = sf::milliseconds(8);

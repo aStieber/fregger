@@ -160,12 +160,16 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="mapgen.cpp" />
+    <ClCompile Include="PerlinNoise.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="entity.h" />
     <ClInclude Include="fregger.h" />
     <ClInclude Include="board.h" />
     <ClInclude Include="helpers.h" />
+    <ClInclude Include="mapgen.h" />
+    <ClInclude Include="PerlinNoise.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

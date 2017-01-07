@@ -1,6 +1,7 @@
 #include "board.h"
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include "mapgen.h"
 
 
 
@@ -46,8 +47,8 @@ void board::init(ByteVec& boardMap) {
 }
 
 board::board() {
-	//init(getPerlinMap());
-	init(defaultMap);
+	init(getPerlinMap());
+	//init(defaultMap);
 
 }
 
