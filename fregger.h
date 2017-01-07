@@ -14,7 +14,7 @@ extern sf::Texture TEXTURE_START;
 extern sf::Texture TEXTURE_FINISH;
 
 const enum { INGAME, CRUSHED, DROWNED, WON };
-const enum { DIRT, WATER, START, FINISH }; //ground types
+const enum { DIRT, WATER, START, FINISH, VISITED}; //ground types
 const enum { NORTH, SOUTH, EAST, WEST };
 
 
