@@ -60,57 +60,30 @@ bool recurse(std::vector<unsigned char>& map, int loc) {
 
 	unsigned short liberties = 0; //go reference
 
-								  //if up is valid
+	//if up is valid
 	int var = loc - BOARD_WIDTH;
-	if (loc >= BOARD_HEIGHT) {
-		if (map[var] == FINISH) {
-			return(true);
-		}
-		if (map[var] != WATER && map[var] != VISITED) {
-			map[var] = VISITED;
-			liberties += recurse(map, var);
-		}
-	}
+	liberties += recurseHelper(map, (loc >= BOARD_HEIGHT), var);
 	//if left
 	var = loc - 1;
-	if (loc % BOARD_WIDTH != 0) {
-		if (map[var] == FINISH) {
-			return(true);
-		}
-		if (map[var] != WATER && map[var] != VISITED) {
-			map[var] = VISITED;
-			liberties += recurse(map, var);
-		}
-	}
+	liberties += recurseHelper(map, (loc % BOARD_WIDTH), var);
 	//if right
 	var = loc + 1;
-	if ((var) % BOARD_WIDTH != 0) {
-		if (map[var] == FINISH) {
-			return(true);
-		}
-		if (map[var] != WATER && map[var] != VISITED) {
-			map[var] = VISITED;
-			liberties += recurse(map, var);
-		}
-	}
+	liberties += recurseHelper(map, (var % BOARD_WIDTH), var);
 	//if down
 	var = loc + BOARD_WIDTH;
-	if (loc < (BOARD_HEIGHT * (BOARD_WIDTH - 1))) {
-		if (map[var] == FINISH) {
-			return(true);
-		}
-		if (map[var] != WATER && map[var] != VISITED) {
-			map[var] = VISITED;
-			liberties += recurse(map, var);
-		}
-	}
+	liberties += recurseHelper(map, (loc < (BOARD_HEIGHT * (BOARD_WIDTH - 1))), var);
 
 	return((bool)liberties);
-
-
-
 }
 
-node::node(int n) {
-	cellNum = n;
+bool recurseHelper(std::vector<unsigned char>& map, bool isValidLoc, int var) {
+	if (isValidLoc) {
+		if (map[var] == FINISH) { return(true); }
+
+		if (map[var] != WATER && map[var] != VISITED) {
+			map[var] = VISITED;
+			return(recurse(map, var));
+		}
+	}
+	return(false);
 }
