@@ -13,8 +13,8 @@ extern sf::Texture TEXTURE_PIXEL;
 extern sf::Texture TEXTURE_START;
 extern sf::Texture TEXTURE_FINISH;
 
-const enum { INGAME, CRUSHED, DROWNED, WON };
-const enum { DIRT, WATER, START, FINISH, VISITED}; //ground types
+const enum { INGAME, CRUSHED, DROWNED, WON, WENT_OOB};
+const enum { DIRT, WATER, START, FINISH, VISITED, OOB}; //ground types
 
 
 extern const int WINDOW_WIDTH;

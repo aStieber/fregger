@@ -41,7 +41,7 @@ bool entityManager::getLocation(enemy& e) {
 
 	e.initializePosition.y = validNums[rand() % validNums.size()];
 
-	if (rand() % 3) { //starting on right
+	if (rand() % 2) { //starting on right
 		e.initializePosition.x = (BOARD_WIDTH + e.length);
 		e.dirRIGHT = -1;
 	}
@@ -126,56 +126,23 @@ bool entity::activate() {
 
 void player::initialize() {
 	sizeModifier = 0.8;
+
 	sprite.setTexture(TEXTURE_FREG);
+	sf::Vector2u tSize = TEXTURE_FREG.getSize();	
+	sprite.setOrigin(sf::Vector2f(tSize.x / 2.0, tSize.y / 2.0));
+
+	meterPos = sf::Vector2f(meterPos.x + .5, meterPos.y + .5);
+
 	sprite.setScale(sf::Vector2f((sizeModifier * (float)WINDOW_WIDTH) / ((float)BOARD_WIDTH * (float)TEXTURE_FREG.getSize().x),
 								(sizeModifier * (float)WINDOW_HEIGHT) / ((float)BOARD_HEIGHT * (float)TEXTURE_FREG.getSize().y)));
 	speed = (float)NUM_METERS_PER_CELL / 40.0;
 }
 
-int player::getGround(board &b) {
-	int row = -1;
-	int column = -1;
-	
-	float gap = NUM_METERS_PER_CELL - (NUM_METERS_PER_CELL * sizeModifier);
-	if (fmod(meterPos.x, NUM_METERS_PER_CELL) <= gap) {
-		column = (int)(meterPos.x / NUM_METERS_PER_CELL);
+int player::getGroundType(board &b) {
+	int y = meterPos.y / NUM_METERS_PER_CELL;
+	int x = meterPos.x / NUM_METERS_PER_CELL;
+	if (0 <= y && y < BOARD_HEIGHT && 0 <= x && y < BOARD_WIDTH) {
+		return(b.gameBoard[y][x].groundType);
 	}
-	if (fmod(meterPos.y, NUM_METERS_PER_CELL) <= gap) {
-		row = (int)(meterPos.y / NUM_METERS_PER_CELL);
-	}
-	if (row >= 0 && column >= 0) {
-		return(b.gameBoard[row][column].groundType);
-	}
-	return(-1);
+	return(OOB);
 }
-
-//int player::getGround(board &b) {
-//	float gap = NUM_METERS_PER_CELL - (NUM_METERS_PER_CELL * sizeModifier);
-//	int row = (fmod(meterPos.y, NUM_METERS_PER_CELL) <= gap) ? (int)(meterPos.y / NUM_METERS_PER_CELL) : -1;
-//	int column = (fmod(meterPos.x, NUM_METERS_PER_CELL) <= gap) ? (int)(meterPos.x / NUM_METERS_PER_CELL) : -1;
-//	if (row >= 0 && column >= 0) {
-//		return(b.gameBoard[row][column].groundType);
-//	}
-//	return(-1);
-//}
-
-
-
-/*
-#define __vand _mm_and_ps
-__vec4 is mm128
-
-bool AABox::Contains(const AABox& b) const {
-	return(RangeContains(mMin, mMax, b.mMin, b.mMax));
-}
-
-bool RangeContains(const Vector& outerMin, const Vector& outerMax, const Vector& innerMin, const Vector& innerMax) {
-	__vec4 a = _mm_cmpge_ps(innerMin.v4, outerMin.v4);
-	__vec4 b = _mm_cmpge_ps(outerMax.v4, innerMax.v4);
-	__vec4 result = __vand(a, b);
-
-	int c = _mm_movemask_ps(result);
-	const int mask = 7; // Don't care about W
-	return((c & mask) == mask);
-}
-*/

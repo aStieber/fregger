@@ -8,7 +8,6 @@ class entity {
 public:
 	entity();
 	entity(sf::Vector2i pos);
-	bool checkIfAtDestination();
 	sf::Sprite sprite;
 	
 	sf::Vector2i initializePosition;
@@ -26,7 +25,7 @@ protected:
 class player : public entity {
 public:
 	player(sf::Vector2i pos) : entity(pos) { initialize(); };
-	int getGround(board& b);
+	int getGroundType(board& b);
 	float sizeModifier = 1.0;
 private:
 	void initialize();
@@ -35,10 +34,8 @@ private:
 class enemy : public entity {
 public:
 	enemy() : entity() {};
-	enemy(sf::Vector2i pos) : entity(pos) { initialize(); };
+	enemy(sf::Vector2i pos) : entity(pos) {};
 	
-private:
-	void initialize();
 };
 
 class entityManager {

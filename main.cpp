@@ -26,17 +26,13 @@ sf::Text loadText(std::string text, sf::Font& font) {
 }
 
 
-void initializeGame() {
-
-}
-
-
 int WinMain() {
 	sf::Font font;
 	font.loadFromFile("Inconsolata-Regular.ttf");
 	sf::Text crushedText = loadText("crushed | press R", font);
 	sf::Text drownedText = loadText("drowned | press R", font);
 	sf::Text wonText = loadText("you won it | press R", font);
+	sf::Text oobText = loadText("stay in it | press R", font);
 #ifdef DEBUG
 	sf::Text debugText;
 #endif // DEBUG
@@ -73,12 +69,8 @@ int WinMain() {
 					window.close();
 					exit(0);
 				}
-				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
-					reset = true;
-				}
-				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Q) {
-					exit(0);
-				}
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) { reset = true; }
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Q) { exit(0); }
 			}
 			if (reset) { break; }
 
@@ -96,12 +88,15 @@ int WinMain() {
 				eManager.update();
 				if (eManager.checkCollisions(freg)) { status = CRUSHED; }
 				else {
-					switch (freg.getGround(b)) {
+					switch (freg.getGroundType(b)) {
+					case OOB:
+						status = WENT_OOB;
+						break;
 					case WATER:
 						status = DROWNED;
 						break;
 					case FINISH:
-						status = FINISH;
+						status = WON;
 						break;
 					default:
 						status = INGAME;
@@ -135,6 +130,9 @@ int WinMain() {
 						break;
 					case WON:
 						window.draw(wonText);
+						break;
+					case WENT_OOB:
+						window.draw(oobText);
 						break;
 					default:
 						break;
