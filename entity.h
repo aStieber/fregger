@@ -11,15 +11,14 @@ public:
 	bool checkIfAtDestination();
 	sf::Sprite sprite;
 	
-	sf::Vector2i boardPos;
+	sf::Vector2i initializePosition;
 	sf::Vector2f meterPos;
-	uint8_t direction = 5;
-	sf::Vector2i destinationPos;
-	sf::Vector2f destinationMeterPos;
+	short dirUP = 0;
+	short dirRIGHT = 0;
 	float speed;
-	bool activate(board& b);
+	bool activate();
+	int length = 1;
 protected:
-	
 	sf::Texture texture;
 };
 
@@ -27,7 +26,8 @@ protected:
 class player : public entity {
 public:
 	player(sf::Vector2i pos) : entity(pos) { initialize(); };
-	bool isDrowned(board& b);
+	int getGround(board& b);
+	float sizeModifier = 1.0;
 private:
 	void initialize();
 };
@@ -36,7 +36,7 @@ class enemy : public entity {
 public:
 	enemy() : entity() {};
 	enemy(sf::Vector2i pos) : entity(pos) { initialize(); };
-	int length;
+	
 private:
 	void initialize();
 };
@@ -44,10 +44,9 @@ private:
 class entityManager {
 public:
 	entityManager(int _numOfBuses, int _difficulty);
-	
-	void update(board& b);
+	void update();
 	void drawEntities(sf::RenderWindow& w);
-	bool checkCollision(player freg);
+	bool checkCollisions(player& freg);
 private:
 	int difficulty;
 	std::vector<bool> validRows;

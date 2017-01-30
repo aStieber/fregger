@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <ostream>
 #include <SFML/Graphics.hpp>
+#include "fregger.h"
 
 
 
@@ -16,7 +17,7 @@ entityManager::entityManager(int _numOfBuses, int _difficulty) {
 		if (createEntity(tmp)) {
 			delayEntrance(tmp); //only done at beginning of game
 			EntityList.push_back(tmp);
-			validRows[tmp.boardPos.y] = false;
+			validRows[tmp.initializePosition.y] = false;
 		}
 	}
 }
@@ -38,22 +39,18 @@ bool entityManager::getLocation(enemy& e) {
 	}
 	if (validNums.size() == 0) { return(false); }
 
-	e.boardPos.y = validNums[rand() % validNums.size()];
-	e.destinationPos = e.boardPos;
+	e.initializePosition.y = validNums[rand() % validNums.size()];
 
-	if (rand() % 2) { //starting on right
-		e.boardPos.x = (BOARD_WIDTH + e.length);
-		e.destinationPos.x = (0 - e.length);
-		e.direction = WEST;
+	if (rand() % 3) { //starting on right
+		e.initializePosition.x = (BOARD_WIDTH + e.length);
+		e.dirRIGHT = -1;
 	}
 	else { //starting on left
-		e.boardPos.x = (0 - e.length);
-		e.destinationPos.x = (BOARD_WIDTH + e.length);
-		e.direction = EAST;
+		e.initializePosition.x = (0 - e.length);
+		e.dirRIGHT = 1;
 	}
 
-	e.meterPos = boardPosToMeterPos(e.boardPos);
-	e.destinationMeterPos = boardPosToMeterPos(e.destinationPos);
+	e.meterPos = boardPosToMeterPos(e.initializePosition);
 	e.sprite.setPosition(meterToPixelCoords(e.meterPos));
 
 	return(true);
@@ -73,24 +70,23 @@ bool entityManager::createSprite(enemy& e) {
 void entityManager::delayEntrance(enemy& e) {
 
 	int distance = rand() % 8;
-	e.boardPos.x += (e.direction == EAST ? (-1 * distance) : distance);
+	e.initializePosition.x += e.dirRIGHT * distance;
 
-	e.meterPos = boardPosToMeterPos(e.boardPos);
-	e.destinationMeterPos = boardPosToMeterPos(e.destinationPos);
+	e.meterPos = boardPosToMeterPos(e.initializePosition);
 	e.sprite.setPosition(meterToPixelCoords(e.meterPos));
 }
 
-void entityManager::update(board& b) {
+void entityManager::update() {
 	std::vector<int> markedForDeletion;
 	for (int i = 0; i < EntityList.size(); i++) {
-		if (EntityList[i].activate(b)) {
+		if (EntityList[i].activate()) {
 			markedForDeletion.push_back(i);
-			validRows[EntityList[i].boardPos.y] = true;
+			validRows[EntityList[i].initializePosition.y] = true;
 		}
 	}
 	for (int& d : markedForDeletion) {
 		createEntity(EntityList[d]);
-		validRows[EntityList[d].boardPos.y] = false;
+		validRows[EntityList[d].initializePosition.y] = false;
 	}
 }
 
@@ -100,10 +96,8 @@ void entityManager::drawEntities(sf::RenderWindow& w) {
 	}
 }
 
-bool entityManager::checkCollision(player freg) {
-	sf::Sprite fregSprite = freg.sprite; //sprite.getGlobalBounds()
-	//fregSprite.setOrigin(200, 200);
-	//fregSprite.scale(0.9, 0.9);
+bool entityManager::checkCollisions(player& freg) {
+	sf::Sprite fregSprite = freg.sprite;
 	sf::FloatRect fB = fregSprite.getGlobalBounds();
 	for (enemy& e : EntityList) {
 		if (fB.intersects(e.sprite.getGlobalBounds())) { return(true); }
@@ -113,10 +107,8 @@ bool entityManager::checkCollision(player freg) {
 
 
 entity::entity(sf::Vector2i pos) {
-	boardPos = pos;
-	destinationPos = boardPos;
-	meterPos = boardPosToMeterPos(boardPos);
-	destinationMeterPos = meterPos;
+	initializePosition = pos;
+	meterPos = boardPosToMeterPos(initializePosition);
 	sprite.setPosition(meterPos);
 }
 
@@ -124,39 +116,66 @@ entity::entity() {
 }
 
 
-bool entity::activate(board& b) {
-	switch (direction) {
-	case EAST:
-		meterPos.x += speed;
-		if (meterPos.x >= destinationMeterPos.x) { return(true); }
-		break;
-	case WEST:
-		meterPos.x -= speed;
-		if (meterPos.x <= destinationMeterPos.x) { return(true); }
-		break;
-	case NORTH:
-		meterPos.y -= speed;
-		if (meterPos.y <= destinationMeterPos.y) { return(true); }
-		break;
-	case SOUTH:
-		meterPos.y += speed;
-		if (meterPos.y >= destinationMeterPos.y) { return(true); }
-		break;
-	default:
-		break;
-	}
+bool entity::activate() {
+	meterPos.x += speed * dirRIGHT;
+	meterPos.y -= speed * dirUP;
+
 	sprite.setPosition(meterToPixelCoords(meterPos));
-	return(false);
+	return((meterPos.x >= (NUM_METERS_PER_CELL * (BOARD_WIDTH + length))) || ((meterPos.x <= (-1 * NUM_METERS_PER_CELL * length))) || (meterPos.y <= 0) || (meterPos.y >= (NUM_METERS_PER_CELL * BOARD_HEIGHT)));
 }
 
 void player::initialize() {
+	sizeModifier = 0.8;
 	sprite.setTexture(TEXTURE_FREG);
-	sprite.setScale(sf::Vector2f((float)WINDOW_WIDTH / ((float)BOARD_WIDTH * (float)TEXTURE_FREG.getSize().x),
-								(float)WINDOW_HEIGHT / ((float)BOARD_HEIGHT * (float)TEXTURE_FREG.getSize().y)));
+	sprite.setScale(sf::Vector2f((sizeModifier * (float)WINDOW_WIDTH) / ((float)BOARD_WIDTH * (float)TEXTURE_FREG.getSize().x),
+								(sizeModifier * (float)WINDOW_HEIGHT) / ((float)BOARD_HEIGHT * (float)TEXTURE_FREG.getSize().y)));
 	speed = (float)NUM_METERS_PER_CELL / 40.0;
 }
 
-bool player::isDrowned(board& b) {
-	auto x = b.gameBoard[boardPos.y][boardPos.x].groundType;
-	return !(x == START || x == FINISH || x == DIRT);//if dirt
+int player::getGround(board &b) {
+	int row = -1;
+	int column = -1;
+	
+	float gap = NUM_METERS_PER_CELL - (NUM_METERS_PER_CELL * sizeModifier);
+	if (fmod(meterPos.x, NUM_METERS_PER_CELL) <= gap) {
+		column = (int)(meterPos.x / NUM_METERS_PER_CELL);
+	}
+	if (fmod(meterPos.y, NUM_METERS_PER_CELL) <= gap) {
+		row = (int)(meterPos.y / NUM_METERS_PER_CELL);
+	}
+	if (row >= 0 && column >= 0) {
+		return(b.gameBoard[row][column].groundType);
+	}
+	return(-1);
 }
+
+//int player::getGround(board &b) {
+//	float gap = NUM_METERS_PER_CELL - (NUM_METERS_PER_CELL * sizeModifier);
+//	int row = (fmod(meterPos.y, NUM_METERS_PER_CELL) <= gap) ? (int)(meterPos.y / NUM_METERS_PER_CELL) : -1;
+//	int column = (fmod(meterPos.x, NUM_METERS_PER_CELL) <= gap) ? (int)(meterPos.x / NUM_METERS_PER_CELL) : -1;
+//	if (row >= 0 && column >= 0) {
+//		return(b.gameBoard[row][column].groundType);
+//	}
+//	return(-1);
+//}
+
+
+
+/*
+#define __vand _mm_and_ps
+__vec4 is mm128
+
+bool AABox::Contains(const AABox& b) const {
+	return(RangeContains(mMin, mMax, b.mMin, b.mMax));
+}
+
+bool RangeContains(const Vector& outerMin, const Vector& outerMax, const Vector& innerMin, const Vector& innerMax) {
+	__vec4 a = _mm_cmpge_ps(innerMin.v4, outerMin.v4);
+	__vec4 b = _mm_cmpge_ps(outerMax.v4, innerMax.v4);
+	__vec4 result = __vand(a, b);
+
+	int c = _mm_movemask_ps(result);
+	const int mask = 7; // Don't care about W
+	return((c & mask) == mask);
+}
+*/

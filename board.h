@@ -10,7 +10,7 @@ struct cell {
 public:
 	cell(int _ground, sf::Vector2i _boardPos);
 	int groundType;
-	sf::Vector2i boardPos;
+	sf::Vector2i initializePosition;
 	sf::Texture& getTexture();
 };
 

@@ -5,22 +5,9 @@
 
 
 
-
-ByteVec defaultMap = { FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH,
-						WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER,
-						WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER,
-						WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER,
-						WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER, WATER,
-						DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
-						DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
-						DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
-						DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
-						DIRT, DIRT, DIRT, DIRT, START, DIRT, DIRT, DIRT, DIRT, DIRT };
-
-
 cell::cell(int _ground, sf::Vector2i _boardPos) {
 	groundType = _ground;
-	boardPos = _boardPos;
+	initializePosition = _boardPos;
 }
 
 void board::init(ByteVec& boardMap) {
@@ -35,7 +22,7 @@ void board::init(ByteVec& boardMap) {
 			cell tmpCell = cell(boardMap[y*BOARD_HEIGHT + x], sf::Vector2i(x, y));
 			sf::Sprite sprite;
 			sprite.setTexture(tmpCell.getTexture());
-			sprite.setPosition(meterToPixelCoords(boardPosToMeterPos(tmpCell.boardPos)));
+			sprite.setPosition(meterToPixelCoords(boardPosToMeterPos(tmpCell.initializePosition)));
 			sprite.scale(cellSpriteScale);
 			bg.draw(sprite);
 			currentRow.push_back(tmpCell);
@@ -47,8 +34,20 @@ void board::init(ByteVec& boardMap) {
 }
 
 board::board() {
-	init(getPerlinMap());
+	ByteVec defaultMap = { FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH,
+		DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
+		DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
+		DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
+		DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
+		DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
+		DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
+		DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
+		DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
+		DIRT, DIRT, DIRT, DIRT, START, DIRT, DIRT, DIRT, DIRT, DIRT };
 	//init(defaultMap);
+
+	init(getPerlinMap());
+	
 
 }
 

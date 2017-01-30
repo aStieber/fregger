@@ -25,10 +25,6 @@ sf::Text loadText(std::string text, sf::Font& font) {
 	return(tmp);
 }
 
-void setDest(player& f, bool& i) {
-	f.destinationPos = f.boardPos;
-	i = true;
-}
 
 void initializeGame() {
 
@@ -63,7 +59,6 @@ int WinMain() {
 
 		entityManager eManager(6, 2);
 
-		bool inputDisabled = false;
 		short status = INGAME;
 		while (window.isOpen()) //main loop
 		{
@@ -74,56 +69,49 @@ int WinMain() {
 			sf::Event event;
 			bool reset = false;
 			while (window.pollEvent(event)) {
-				if (event.type == sf::Event::Closed)
+				if (event.type == sf::Event::Closed) {
 					window.close();
+					exit(0);
+				}
 				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
-					reset = true; //just for testing
+					reset = true;
+				}
+				if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Q) {
+					exit(0);
 				}
 			}
 			if (reset) { break; }
 
 			while (gameTimeAcc >= gameInterval && status == INGAME) {
-				if (!inputDisabled) {
-					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-						setDest(freg, inputDisabled);
-						freg.destinationPos.y -= (freg.destinationPos.y > 0);
-						freg.direction = NORTH;
+				freg.dirUP = 0;
+				freg.dirRIGHT = 0;
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) { freg.dirUP = 1; }
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) { freg.dirUP = -1; }
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) { freg.dirRIGHT = -1; }
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) { freg.dirRIGHT = 1; }
+				
+
+				freg.activate();
+
+				eManager.update();
+				if (eManager.checkCollisions(freg)) { status = CRUSHED; }
+				else {
+					switch (freg.getGround(b)) {
+					case WATER:
+						status = DROWNED;
+						break;
+					case FINISH:
+						status = FINISH;
+						break;
+					default:
+						status = INGAME;
 					}
-					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-						setDest(freg, inputDisabled);
-						freg.destinationPos.y += (freg.destinationPos.y < (BOARD_HEIGHT - 1));
-						freg.direction = SOUTH;
-					}
-					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-						setDest(freg, inputDisabled);
-						freg.destinationPos.x -= (freg.destinationPos.x > 0);
-						freg.direction = WEST;
-					}
-					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-						setDest(freg, inputDisabled);
-						freg.destinationPos.x += (freg.destinationPos.x < (BOARD_WIDTH - 1));
-						freg.direction = EAST;
-					}
-					else { inputDisabled = false; }
-					freg.destinationMeterPos = boardPosToMeterPos(freg.destinationPos);
 				}
-
-				if (freg.activate(b)) {
-					inputDisabled = false;
-					freg.boardPos = freg.destinationPos;
-					freg.meterPos = boardPosToMeterPos(freg.boardPos);
-					freg.sprite.setPosition(meterToPixelCoords(freg.meterPos));
-				}
-
-
-				eManager.update(b);
-				if (eManager.checkCollision(freg)) { status = CRUSHED; }
-				if (freg.isDrowned(b)) { status = DROWNED; }
-				if (freg.boardPos.y == 0) { status = WON; }
+		
 
 #ifdef DEBUG
 				std::stringstream debugStr;
-				//debugStr << "x: " << freg.boardPos.x << " y: " << freg.boardPos.y << " g: " << b.gameBoard[freg.boardPos.y][freg.boardPos.x].ground;
+				debugStr << "x: " << freg.boardPos.x << " y: " << freg.boardPos.y << " g: " << b.gameBoard[freg.boardPos.y][freg.boardPos.x].ground;
 				debugText = loadText(debugStr.str(), font);
 #endif // DEBUG
 
@@ -158,7 +146,5 @@ int WinMain() {
 			}
 		}
 	}
-	
-
 	return 0;
 }

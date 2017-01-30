@@ -15,7 +15,6 @@ extern sf::Texture TEXTURE_FINISH;
 
 const enum { INGAME, CRUSHED, DROWNED, WON };
 const enum { DIRT, WATER, START, FINISH, VISITED}; //ground types
-const enum { NORTH, SOUTH, EAST, WEST };
 
 
 extern const int WINDOW_WIDTH;
