@@ -3,19 +3,24 @@
 #include "board.h"
 #include "entity.h"
 #include <SFML/Graphics.hpp>
+#include <functional>
+#include <vector>
 
-
+using funcVector = std::vector<std::function<void(player& f)>>;
 
 class game {
 public:
-	game(bool neuralNetMode, sf::RenderWindow& _window);
-	~game();
+	game(bool neuralNetMode, sf::RenderWindow* _window);
 	
-	void nextFrame();
-	void initializeGame();
+
+	void nextPhysicsFrame(sf::Time& gameTimeAcc, player& freg, entityManager& eManager, sf::Event& event, funcVector& fV);
 private:
-	void runGame(sf::Time& gameTimeAcc, sf::Time& windowRefreshTimeAcc, player& freg, entityManager& eManager, sf::Event& event);
-	sf::RenderWindow window;
+	funcVector collectInputsFromKeyboard();
+	void updateWindow(player& freg, entityManager& eManager, sf::Time& windowRefreshTimeAcc);
+
+
+
+	sf::RenderWindow* window;
 	short status;
 
 
@@ -26,9 +31,3 @@ private:
 	sf::Clock clock;
 
 };
-
-game::game() {
-}
-
-game::~game() {
-}

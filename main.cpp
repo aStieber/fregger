@@ -1,14 +1,6 @@
-#include "board.h"
-#include "entity.h"
 #include "fregger.h"
-#include <sstream>
+#include "FrogGame.h"
 #include <SFML/Graphics.hpp>
-
-
-
-
-
-
 
 int WinMain() {
 	
@@ -17,5 +9,6 @@ int WinMain() {
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "go to the top", sf::Style::Close);
 	
 
+	game g(0, &window);
 	
 }
