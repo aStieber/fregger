@@ -23,3 +23,11 @@ extern const int NUM_METERS_PER_CELL;
 
 extern const int BOARD_WIDTH;
 extern const int BOARD_HEIGHT;
+
+extern const sf::Text crushedText;
+extern const sf::Text drownedText;
+extern const sf::Text wonText;
+extern const sf::Text oobText;
+
+void loadTextures();
+void loadText();

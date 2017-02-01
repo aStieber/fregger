@@ -1,8 +1,7 @@
 #include "entity.h"
 #include <Windows.h>
 #include <ostream>
-#include <SFML/Graphics.hpp>
-#include "fregger.h"
+
 
 
 
