@@ -37,7 +37,7 @@ sf::Text getText(std::string text, sf::Font& font) {
 }
 void loadText() {
 	sf::Font font;
-	font.loadFromFile("Inconsolata-Regular.ttf");
+	font.loadFromFile("Arial.ttf");
 	crushedText = getText("crushed | press R", font);
 	drownedText = getText("drowned | press R", font);
 	wonText = getText("you won it | press R", font);

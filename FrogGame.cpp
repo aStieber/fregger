@@ -38,15 +38,12 @@ game::game(bool neuralNetMode, sf::RenderWindow* _window) {
 }
 
 funcVector game::collectInputsFromKeyboard() {
-	funcVector keySet;
+	funcVector keySet = { [](player& p) { p.dirRIGHT = 0; p.dirUP = 0; } };
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) { keySet.emplace_back([](player& p) { p.dirUP = 1; }); }
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) { keySet.emplace_back([](player& p) {	p.dirUP = -1; }); }
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) { keySet.emplace_back([](player& p) {	p.dirRIGHT = -1; }); }
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) { keySet.emplace_back([](player& p) {	p.dirRIGHT = 1; }); }
 	
-	if (keySet.size() == 0) {
-		
-	}
 	return(keySet);
 }
 
