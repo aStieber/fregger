@@ -82,7 +82,6 @@ int WinMain() {
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) { freg.dirRIGHT = -1; }
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) { freg.dirRIGHT = 1; }
 				
-
 				freg.activate();
 
 				eManager.update();

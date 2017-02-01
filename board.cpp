@@ -34,6 +34,7 @@ void board::init(ByteVec& boardMap) {
 }
 
 board::board() {
+	/*
 	ByteVec defaultMap = { FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH, FINISH,
 		DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
 		DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
@@ -44,7 +45,8 @@ board::board() {
 		DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
 		DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT, DIRT,
 		DIRT, DIRT, DIRT, DIRT, START, DIRT, DIRT, DIRT, DIRT, DIRT };
-	//init(defaultMap);
+	init(defaultMap);
+	*/
 
 	init(getPerlinMap());
 	
