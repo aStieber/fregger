@@ -24,7 +24,7 @@ game::game(bool neuralNetMode, sf::RenderWindow* _window) {
 			gameTimeAcc += t;
 			windowRefreshTimeAcc += t;
 			while (gameTimeAcc >= gameInterval && status == INGAME) {
-				funcVector fV = collectInputsFromKeyboard();
+				std::vector<sf::Keyboard::Key> fV = collectInputsFromKeyboard();
 				nextPhysicsFrame(gameTimeAcc, freg, eManager, event, fV);
 			}
 			
@@ -37,19 +37,39 @@ game::game(bool neuralNetMode, sf::RenderWindow* _window) {
 	}	
 }
 
-funcVector game::collectInputsFromKeyboard() {
-	funcVector keySet = { [](player& p) { p.dirRIGHT = 0; p.dirUP = 0; } };
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) { keySet.emplace_back([](player& p) { p.dirUP = 1; }); }
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) { keySet.emplace_back([](player& p) {	p.dirUP = -1; }); }
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) { keySet.emplace_back([](player& p) {	p.dirRIGHT = -1; }); }
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) { keySet.emplace_back([](player& p) {	p.dirRIGHT = 1; }); }
+std::vector<sf::Keyboard::Key> game::collectInputsFromKeyboard() {
+	std::vector<sf::Keyboard::Key> keySet;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) { keySet.emplace_back(sf::Keyboard::Up); }
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) { keySet.emplace_back(sf::Keyboard::Down); }
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) { keySet.emplace_back(sf::Keyboard::Left); }
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) { keySet.emplace_back(sf::Keyboard::Right); }
 	
 	return(keySet);
 }
 
 
-void game::nextPhysicsFrame(sf::Time& gameTimeAcc, player& freg, entityManager& eManager, sf::Event& event, funcVector& directions) {
-	for (std::function<void(player& f)>& dir : directions) { dir(freg); }
+void game::nextPhysicsFrame(sf::Time& gameTimeAcc, player& freg, entityManager& eManager, sf::Event& event, std::vector<sf::Keyboard::Key>& keys) {
+	freg.dirUP = 0;
+	freg.dirRIGHT = 0;
+	for (sf::Keyboard::Key k : keys) {
+		switch (k) {
+		case sf::Keyboard::Up:
+			freg.dirUP = 1;
+			break;
+		case sf::Keyboard::Down:
+			freg.dirUP = -1;
+			break;
+		case sf::Keyboard::Left:
+			freg.dirRIGHT = -1;
+			break;
+		case sf::Keyboard::Right:
+			freg.dirRIGHT = 1;
+			break;
+		default:
+			break;
+		}
+	}
+
 	freg.activate();
 
 	eManager.update();
@@ -73,7 +93,7 @@ void game::nextPhysicsFrame(sf::Time& gameTimeAcc, player& freg, entityManager& 
 }
 
 void game::updateWindow(player& freg, entityManager& eManager, sf::Time& windowRefreshTimeAcc) {
-	window->clear();
+	//window->clear();
 	window->draw(b.background);
 	eManager.drawEntities(*window);
 	window->draw(freg.sprite);

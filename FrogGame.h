@@ -6,16 +6,14 @@
 #include <functional>
 #include <vector>
 
-using funcVector = std::vector<std::function<void(player& f)>>;
-
 class game {
 public:
 	game(bool neuralNetMode, sf::RenderWindow* _window);
 	
 
-	void nextPhysicsFrame(sf::Time& gameTimeAcc, player& freg, entityManager& eManager, sf::Event& event, funcVector& fV);
+	void nextPhysicsFrame(sf::Time& gameTimeAcc, player& freg, entityManager& eManager, sf::Event& event, std::vector<sf::Keyboard::Key>& keys);
 private:
-	funcVector collectInputsFromKeyboard();
+	std::vector<sf::Keyboard::Key> collectInputsFromKeyboard();
 	void updateWindow(player& freg, entityManager& eManager, sf::Time& windowRefreshTimeAcc);
 
 
