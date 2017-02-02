@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+
 extern const int WINDOW_WIDTH;
 extern const int WINDOW_HEIGHT;
 extern const int NUM_METERS_PER_CELL;
@@ -24,10 +25,10 @@ extern const int NUM_METERS_PER_CELL;
 extern const int BOARD_WIDTH;
 extern const int BOARD_HEIGHT;
 
-extern sf::Text CRUSHED_TEXT;
-extern sf::Text DROWNED_TEXT;
-extern sf::Text WON_TEXT;
-extern sf::Text OOB_TEXT;
+extern sf::Text crushedText;
+extern sf::Text drownedText;
+extern sf::Text wonText;
+extern sf::Text oobText;
 
 void loadTextures();
 void loadText();

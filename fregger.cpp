@@ -14,12 +14,10 @@ sf::Texture TEXTURE_PIXEL;
 sf::Texture TEXTURE_START;
 sf::Texture TEXTURE_FINISH;
 
-sf::Text CRUSHED_TEXT;
-sf::Text DROWNED_TEXT;
-sf::Text WON_TEXT;
-sf::Text OOB_TEXT;
-
-sf::Font FONT;
+sf::Text crushedText;
+sf::Text drownedText;
+sf::Text wonText;
+sf::Text oobText;
 
 void loadTextures() {
 	TEXTURE_DIRT.loadFromFile("images/dirt.png");
@@ -38,9 +36,10 @@ sf::Text getText(std::string text, sf::Font& font) {
 	return(tmp);
 }
 void loadText() {
-	FONT.loadFromFile("Inconsolata-Regular.ttf");
-	CRUSHED_TEXT = getText("crushed | press R", FONT);
-	DROWNED_TEXT = getText("drowned | press R", FONT);
-	WON_TEXT = getText("you won it | press R", FONT);
-	OOB_TEXT = getText("stay in it | press R", FONT);
+	sf::Font font;
+	font.loadFromFile("Arial.ttf");
+	crushedText = getText("crushed | press R", font);
+	drownedText = getText("drowned | press R", font);
+	wonText = getText("you won it | press R", font);
+	oobText = getText("stay in it | press R", font);
 }
