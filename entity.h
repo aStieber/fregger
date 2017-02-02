@@ -38,9 +38,9 @@ public:
 	
 };
 
-class entityManager {
+class busManager {
 public:
-	entityManager(int _numOfBuses, int _difficulty);
+	busManager(int _numOfBuses, int _difficulty);
 	void update();
 	void drawEntities(sf::RenderWindow& w);
 	bool checkCollisions(player& freg);

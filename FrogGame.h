@@ -8,17 +8,24 @@
 
 class game {
 public:
-	game(bool neuralNetMode, sf::RenderWindow* _window);
+	game(bool _neuralNetMode, sf::RenderWindow* _window);
 	
 
-	void nextPhysicsFrame(sf::Time& gameTimeAcc, player& freg, entityManager& eManager, sf::Event& event, std::vector<sf::Keyboard::Key>& keys);
+	void nextPhysicsFrame(sf::Time& gameTimeAcc, player& freg, busManager& eManager, std::vector<sf::Keyboard::Key>& keys, bool& reset);
+	void resetGame();
+	void setInputs(std::vector<sf::Keyboard::Key> keys);
+	
+	board* getBoard();
+	double getFitness();
+	busManager* getBuses();
 private:
-	std::vector<sf::Keyboard::Key> collectInputsFromKeyboard();
-	void updateWindow(player& freg, entityManager& eManager, sf::Time& windowRefreshTimeAcc);
+	std::vector<sf::Keyboard::Key> collectInputsFromDevices();
+	void updateWindow(player& freg, busManager& eManager, sf::Time& windowRefreshTimeAcc);
 
 
 
 	sf::RenderWindow* window;
+	bool neuralNetMode;
 	short status;
 
 

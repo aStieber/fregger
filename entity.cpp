@@ -5,7 +5,7 @@
 
 
 
-entityManager::entityManager(int _numOfBuses, int _difficulty) {
+busManager::busManager(int _numOfBuses, int _difficulty) {
 	srand(time(NULL));
 	difficulty = std::max(_difficulty, 3);
 	validRows = std::vector<bool>(BOARD_HEIGHT, true);
@@ -21,7 +21,7 @@ entityManager::entityManager(int _numOfBuses, int _difficulty) {
 	}
 }
 
-bool entityManager::createEntity(enemy& e) {
+bool busManager::createEntity(enemy& e) {
 	e.length = (rand() % difficulty) + (rand() % 3) + 1;
 	
 	if (getLocation(e)) {
@@ -31,7 +31,7 @@ bool entityManager::createEntity(enemy& e) {
 	return(false);
 }
 
-bool entityManager::getLocation(enemy& e) {
+bool busManager::getLocation(enemy& e) {
 	std::vector<int> validNums;
 	for (size_t i = 0; i < validRows.size(); i++) {
 		if (validRows[i]) { validNums.push_back(i); }
@@ -55,7 +55,7 @@ bool entityManager::getLocation(enemy& e) {
 	return(true);
 }
 
-bool entityManager::createSprite(enemy& e) {
+bool busManager::createSprite(enemy& e) {
 	float yRatio = (float)WINDOW_HEIGHT / (float)BOARD_HEIGHT;
 	float xRatio = (float)WINDOW_WIDTH / (float)BOARD_WIDTH;
 	e.sprite.setTexture(TEXTURE_PIXEL);
@@ -66,7 +66,7 @@ bool entityManager::createSprite(enemy& e) {
 
 }
 
-void entityManager::delayEntrance(enemy& e) {
+void busManager::delayEntrance(enemy& e) {
 
 	int distance = rand() % 8;
 	e.initializePosition.x += e.dirRIGHT * distance;
@@ -75,7 +75,7 @@ void entityManager::delayEntrance(enemy& e) {
 	e.sprite.setPosition(meterToPixelCoords(e.meterPos));
 }
 
-void entityManager::update() {
+void busManager::update() {
 	std::vector<int> markedForDeletion;
 	for (int i = 0; i < EntityList.size(); i++) {
 		if (EntityList[i].activate()) {
@@ -89,13 +89,13 @@ void entityManager::update() {
 	}
 }
 
-void entityManager::drawEntities(sf::RenderWindow& w) {
+void busManager::drawEntities(sf::RenderWindow& w) {
 	for (enemy& e : EntityList) {
 		w.draw(e.sprite);
 	}
 }
 
-bool entityManager::checkCollisions(player& freg) {
+bool busManager::checkCollisions(player& freg) {
 	sf::Sprite fregSprite = freg.sprite;
 	sf::FloatRect fB = fregSprite.getGlobalBounds();
 	for (enemy& e : EntityList) {

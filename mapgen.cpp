@@ -34,7 +34,6 @@ std::vector<unsigned char> getPerlinMap() {
 		std::vector<unsigned char> outputMap(BOARD_HEIGHT * BOARD_WIDTH, NULL);
 		for (size_t m = 0; m < kk; m++) { outputMap[m] = doubleMap[m] > LandModified; }
 
-		//return(outputMap);
 		addStartAndEnd(outputMap);
 		if (verifyWinnable(outputMap)) {
 			return(outputMap);
@@ -58,7 +57,7 @@ bool verifyWinnable(std::vector<unsigned char> map) {
 
 bool recurse(std::vector<unsigned char>& map, int loc) {
 
-	unsigned short liberties = 0; //go reference
+	unsigned short liberties = 0;
 
 	//if up is valid
 	int var = loc - BOARD_WIDTH;
